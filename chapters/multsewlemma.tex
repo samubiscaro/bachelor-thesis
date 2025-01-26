@@ -1,0 +1,462 @@
+\chapter{The Multiplicative Sewing Lemma}
+
+\epigraph{But man, however miserable and unhappy, is always dissatisfied with his condition; he is always in search of something new, something different, something that transcends him.}{Fyodor Dostoevsky, \\ \textit{Crime and Punishment}}
+
+The \textit{Multiplicative Sewing Lemma} \cite{zbMATH05636385} is a non-commutative extension of the classical Sewing Lemma, designed to handle integration in settings where the objects involved do not commute.
+
+In analogy to the classical case the Multiplicative Sewing Lemma constructs a \textit{product integral}, allowing us to define expressions of the form
+$$
+U_t = \prod_0^t e^{dA_s},
+$$
+where \( A \) is typically a matrix or operator valued function of low regularity. 
+
+This lemma extends the applicability of the classical Sewing Lemma to non-commutative settings, offering a robust framework to study the evolution of non-commutative processes, including applications in areas like quantum mechanics, as we shall see.
+
+\section{Strong Control Functions}
+
+Here we need a strong notion of control function.
+
+\begin{definition}
+     We say that a function $V(t)$ defined on $[0,T]$ is a \textit{strong control function} if it is a control function (see Definition \ref{def: contfunc}) and there exists a $\theta > 2$ such that for every $t$
+    $$
+    \overline{V}(t) = \sum_{k \ge 0} \theta^k \cdot V(2^{-k}\cdot t ) < \infty.
+    $$
+\end{definition}
+
+Note that also in this case
+$$
+\overline{V}(t) = V(t) + \cdots + \theta^n\cdot V\cdot(t\cdot2^{-n}) + \theta^{n+1}\cdot\overline{V}(2^{-n-1}\cdot t),
+$$
+which means that
+$$
+\lim_{n\to+\infty} \theta^{n}\cdot\overline{V}(2^{-n}\cdot t) = 0.
+$$
+
+\begin{ex} \label{ex: talphastrong}
+    The function $V(t) = t^\alpha$, with $\alpha>1$, is a strong control function. 
+    
+    We already saw in Example \ref{ex: t^alpha} that it is a control function. We can then choose $0<\beta<\alpha-1$, and by setting $\theta = 2^{1+\beta}>2$, we get:
+    \begin{align*}
+        \overline{V}(t) &= \sum_{k\ge0} \theta^k\cdot V(2^{-k}\cdot t) = \sum_{k\ge0} 2^{(1+\beta)k}\cdot2^{-\alpha k}\cdot t^{\alpha}\\
+        &= t^{\alpha} \cdot \sum_{k\ge0}2^{(1-\alpha + \beta)k} < +\infty
+    \end{align*}
+    since $1-\alpha + \beta < 0$.
+\end{ex}
+
+\section{The Multiplicative Sewing Lemma}
+
+We consider an \textit{associative monoid} $\mathcal{M}$ with a unit element $I$, that is a \textit{complete metric space} under a distance $d$. Let also 
+$$|\cdot|:\mathcal{M}\to\R$$ 
+be a Lipschitz function such that $|I| = 1$.  
+
+We also assume that $d$ that satisfies the following conditions for every $x, y, z \in \mathcal{M}$:
+\begin{equation} \label{eq:inequalities}
+    d(xz, yz) \le |z| \, d(x, y), \quad d(zx, zy) \le |z| \, d(x, y).
+\end{equation}
+
+Let $\mu(a, b)$ be an $\mathcal{M}$-valued function defined for $0 \le a \le b \le T$. We assume that $\mu$ is continuous, that $\mu(a, a) = I$ for every $a$, and that for every $a \le c \le b$ we have
+\begin{equation} \label{eq: d(mu,mumu)}
+   d(\mu(a, b), \mu(a, c) \mu(c, b)) \le V(b-a) 
+\end{equation}
+We say that an $\mathcal{M}$-valued function $u(a, b)$ is \textit{multiplicative} if for every $a \le c \le b$ we have $u(a, b) = u(a, c) u(c, b)$.
+
+The Multiplicative Sewing Lemma states:
+
+\begin{theorem}
+    Let $\mu$ as above satisfying \eqref{eq: d(mu,mumu)}, then there exists a unique multiplicative function $u$ such that
+    $$d(\mu (a,b),u(a,b))\le \co  \cdot \overline{V}(b-a)$$ for every $a\le b$.
+\end{theorem}
+We will prove the theorem by breaking it down into the following lemmas. \\
+We start by setting $\mu_0 = \mu$. By induction, we define
+$$
+\mu_{n+1}(a, b) = \mu_n(a, c) \mu_n(c, b) \quad \text{where} \quad c = \frac{a+b}{2}.
+$$
+Next, we introduce the functions
+$$
+h_n(t) = \sup_{b-a \le t} |\mu_n(a, b)|, \quad \text{and} \quad U_n(t) = \sup_{b-a \le t} d(\mu_{n+1}(a, b), \mu_n(a, b)).
+$$
+
+\begin{lemma}
+    The functions $h_n$ and $U_n$ are continuous and non decreasing, with $h_n(0) = 1$ and $U_n(0) = 0$.
+\end{lemma}
+
+\begin{proof}
+    We start by noting that $h_n(t)$ and $U_n(t)$ are defined as suprema over a bounded interval, ensuring that they are non decreasing.
+    
+    To show continuity, note that since $\mu_n(a, b)$ is continuous in its arguments and the supremum of continuous functions over a compact set is continuous, $h_n(t)$ is continuous, an analogous argument shows that $U_n(t)$ is continuous. 
+    
+    For $h_n(0)$, since $\mu_{n+1}(a, a) = \mu_n(a, a) = I$ for every $n\in\N$ and for every $a\in\mathcal{M}$, we have 
+    $$\sup_{a\in\mathcal{M}}|\mu_n(a, a)| = |I| = 1,$$ 
+    thus $h_n(0) = 1$. Similarly, for $U_n(0)$ we get 
+    $$d(\mu_{n+1}(a, a), \mu_n(a, a)) = 0,$$ 
+    so $U_n(0) = 0$.
+\end{proof}
+
+\begin{lemma}
+    For the functions $h_n$ and $U_n$ the following inequalities hold:
+    \begin{enumerate}
+        \item $h_{n+1}(t) \le h_n(t) + \kappa U_n(t)$, where $\kappa$ is the Lipschitz constant of the map $z \mapsto |z|$.
+        \item $U_{n+1}(t) \le [h_{n}(t/2) + h_{n+1}(t/2)]U_n(t/2)$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We will prove the two inequalities individually. 
+    \begin{enumerate}
+        \item By definition of Lipschitzianity of $|\cdot|$ we have
+        $$
+        ||\mu_{n+1}(a,b)|-|\mu_n(a,b)|| \le \kappa d(\mu_{n+1}(a,b),\mu_n(a,b))
+        $$
+
+        If $|\mu_{n+1}(a,b)|\ge|\mu_n(a,b)|$ then 
+        $$
+        |\mu_{n+1}(a,b)| \le |\mu_n(a,b)| + \kappa d(\mu_{n+1}(a,b),\mu_n(a,b)),
+        $$
+
+        otherwise
+        $$
+        |\mu_{n+1}(a,b)|\le|\mu_n(a,b)| \le |\mu_n(a,b)| + \kappa d(\mu_{n+1}(a,b),\mu_n(a,b)).
+        $$
+        Taking the supremum on both sides we get the desired inequality. Note also that iterating we get:
+        $$
+        h_{n+1}(t) \le h_0(t) + \kappa U_0(t) + \cdots + \kappa U_n(t).
+        $$     
+        \item We have, by expanding the definitions and using the triangular inequality that
+        \begin{align*}
+            d(\mu_{n+1}(a, b), \mu_n&(a, b)) 
+            = d(\mu_n(a, c)\mu_n(c, b), \mu_{n-1}(a, c)\mu_{n-1}(c, b)) \\
+            &\leq d(\mu_n(a, c)\mu_n(c, b), \mu_{n-1}(a, c)\mu_n(c, b)) \\
+            &\quad + d(\mu_{n-1}(a, c)\mu_n(c, b), \mu_{n-1}(a, c)\mu_{n-1}(c, b)). 
+    \end{align*}
+    Using \eqref{eq:inequalities} the first term is bounded by 
+    $$
+    |\mu_n(c, b)| \cdot d(\mu_n(a, c), \mu_{n-1}(a, c)),
+    $$
+    and also the second one by
+    $$
+    |\mu_{n-1}(a, c)| \cdot d(\mu_n(c, b), \mu_{n-1}(c, b)).
+    $$
+    Taking the supremum on both sides we get exactly
+    $$U_{n+1}(t) \le [h_{n}(t/2) + h_{n+1}(t/2)]U_n(t/2).$$
+    \end{enumerate}
+\end{proof}
+
+\begin{lemma}
+    The sequence $h_n$ is bounded and the series $\sum_{n\ge0}U_n$ converges uniformly on $[0,T]$.
+\end{lemma}
+\begin{proof}
+    Since $\theta>2$ we may take $\tau > 0$ such that $h_0(\tau) + \kappa \overline{V}(\tau) \le \theta/2$.
+    
+    Assume that for $t \le \tau$ and $i \le n$ the following inequality holds:
+    $$
+    h_i(t) \le \theta/2,
+    $$
+    $$
+    U_i(t) \le \theta^i \cdot V(t/2^i). 
+    $$
+    Then we have using the last lemma
+    $$
+    h_{n+1}(t) \le h_0(t) + \kappa U_0(t) + \cdots + \kappa U_n(t) \le h_0(t) + \kappa \overline{V}(t) \le \theta / 2
+    $$
+    and
+    \begin{align*}
+        U_{n+1}(t) &\le [h_n(t/2) + h_{n+1}(t/2)]U_n(t/2) \\
+        &\le \theta \cdot U_n(t/2) \le \theta^{n+1} \cdot V(t/2^{n+1})
+    \end{align*}
+    for $t \le \tau$ and every $n$ by induction.
+
+    Thus, for $t \le \tau$, the series 
+    $$
+    \sum_{n\ge0} U_n(t) \le \sum_{n \ge 0} \theta^n V(t \cdot 2^{-n}) = \overline{V}(t) < \infty 
+    $$ 
+    converges, indicating that the sequence $h_n(\tau)$ is bounded.
+    
+    Using the second inequality from the last lemma,  also the series 
+    $$\sum_{n\ge0}U_n(2\tau)$$ 
+    converges, meaning the sequence $h_n(2\tau)$ is also bounded. By proceeding step-by-step, we get that the sequence $h_n$ is bounded, and the series $\sum_{n\ge0}U_n$ converges uniformly on $[0,T]$.
+    
+\end{proof}
+ Consequently, since $\mathcal{M}$ is complete, the sequence $\mu_n(a,b)$ converges uniformly to a continuous function $u(a,b)$.
+ 
+This function $u(a,b)$ has the property that $u(a,b) = u(a,c)u(c,b)$ for any midpoint $c = (a+b)/2$, as before we say that $u$ is \textit{midpoint-multiplicative}.
+ 
+Finally, we have the inequality
+\begin{equation} \label{eq:d(u,mu)}
+    d(u(a,b), \mu(a,b)) \leq \co\cdot\overline{V}(b-a).
+\end{equation}
+
+As in the additive sewing lemma, we will first establish the uniqueness of this function, and once uniqueness has been demonstrated, we will then proceed to show that the function is also multiplicative.
+
+\begin{lemma}
+    Let $v$ be a continuous function that is midpoint multiplicative and such that for every $0\le a \le b \le T$
+    $$
+    d(v(a,b),\mu(a,b))\le \co  \cdot \overline{V}(b-a)
+    $$
+    then $v = u$.
+\end{lemma}
+
+\begin{proof}
+    Let $v$ be such a function. Define $K(t)$ as follows:
+    $$
+    K(t) = \sup_{b-a \leq t} \max \left( |u(a,b)|, |v(a,b)| \right)
+    $$
+    Let $\tau > 0$ be such that $K(\tau) \leq \theta/2$. Given that 
+    $$d(u(a,b), v(a,b)) \leq k \overline{V}(b - a)$$ 
+    for some constant $k$, we then have:  
+    \begin{align*}
+        d(u(a,b), v(a,b)) &= d(u(a,c)u(c,b), v(a,c)v(c,b)) \\
+        &\le d(u(a,c)u(c,b), u(a,c)v(c,b)) \\
+        &\quad + d(u(a,c)v(c,b), v(a,c)v(c,b))\\
+        &\le |u(a,c)|\cdot d(u(c,b), v(c,b))\\
+        &\quad + |v(c,b)|\cdot d(u(a,c), v(a,c))\\
+        &\leq 2K(t/2)k\overline{V}(t/2) \leq k \theta \overline{V}(t/2)
+    \end{align*}    
+    for $b - a \leq t \leq \tau$. If we assume  
+    $$d(u(a,b), v(a,b)) \leq k \theta^{n-1} \overline{V}(t\cdot2^{-n+1})$$ 
+    for $b-a\le t\le\tau$, then, as before:
+    \begin{align*}
+        d(u(a,b), v(a,b)) &\le |u(a,c)|\cdot d(u(c,b), v(c,b)) \\
+        &\quad+ |v(c,b)|\cdot d(u(a,c), v(a,c))\\
+        &\leq 2K(t/2)k \theta^{n-1} \overline{V}(2^{-n+1}\cdot t/2) \\
+        &\leq k \theta^{n} \overline{V}(t\cdot2^{-n})
+    \end{align*} 
+    for every $n$ by induction.
+    
+    Using the fact that $\lim_{n} \theta^{n}\cdot\overline{V}(2^{-n}\cdot t) = 0$, we get that $u(a,b) = v(a,b)$ for all $b - a \leq \tau$. 
+    
+    Finally, this equality can be extended to any $b - a$ using the midpoint-multiplicativity property.
+    
+\end{proof}
+
+We argue now as in the additive case, defining for $k\ge3$ the function
+$$
+w(a,b) = \prod_{i=0}^{k-1} u(t_i, t_{i+1}),
+$$
+where $t_i = a + i \cdot \frac{b-a}{k}$. In a manner similar to the additive case, it follows that 
+
+\begin{lemma}
+    The function $w$ is midpoint-multiplicative and satisfies
+    \begin{equation}
+        d(w(a,b),\mu(a,b))\le \co _k\overline{V}(b-a).    \label{eq:d(w,mu)}
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    The fact that $w$ is midpoint multiplicative follows exactly as in the additive case. We will show the second statement by induction on $k$. Note that for $k = 2$ the relation is exactly the \eqref{eq:d(u,mu)}. 
+    
+    Assume now that \eqref{eq:d(w,mu)} holds for $k-1$, then
+    \begin{align*}
+        d(w(a,b), \mu(a&,b)) \le d(w(a,b), \mu(a,t_{k-1})\mu(t_{k-1},b)) \\
+        &\quad\quad\quad + d(\mu(a,t_{k-1})\mu(t_{k-1},b), \mu(a,b)).
+    \end{align*}
+    Which, expanding the definition and using again the triangular inequality, is less or equal than
+    \begin{align*}
+        & d(\prod_{i=0}^{k-2}u(t_i,t_{i+1})\ u(t_{k-1}, b), \prod_{i=0}^{k-2}u(t_i,t_{i+1})\ \mu(t_{k-1},b)) \\
+        &\quad + d(\prod_{i=0}^{k-2}u(t_i,t_{i+1})\ \mu(t_{k-1},b),
+                    \mu(a,t_{k-1})\mu(t_{k-1},b)) \\
+        &\quad + d(\mu(a,t_{k-1})\mu(t_{k-1},b), \mu(a,b)). 
+    \end{align*}
+    The first term of the sum is, using \eqref{eq:inequalities},
+    \begin{align*}
+        |\prod_{i=0}^{k-2}u(t_i,t_{i+1})|\ d(u(t_{k-1}, b),\mu(t_{k-1},b)) 
+        &\le \co  \cdot \overline{V}(b - t_{k-1})\\
+        &\le \co  \cdot \overline{V}(b-a),
+    \end{align*}
+    while the second one, using also the induction hypothesis is
+    \begin{align*}
+        |\mu(t_{k-1},b)|\ d(\prod_{i=0}^{k-2}u(t_i,t_{i+1}),
+                    \mu(a,t_{k-1}))
+        &\le \co _{k-1} \cdot \overline{V}(t_{k-1} - a)\\
+        &\le \co _{k-1} \cdot \overline{V}(b-a).
+    \end{align*}
+    Lastly, we can bound the last term using \eqref{eq: d(mu,mumu)} and get finally
+    $$
+    d(w(a,b),\mu(a,b))\le \co _k\cdot\overline{V}(b-a).
+    $$
+\end{proof}
+
+Therefore, it follows that $w = u$ meaning that $u$ is, in fact, rationally multiplicative, and, since it is continous, it is also multiplicative.\\ 
+This concludes the proof of the theorem.
+
+\begin{corollary} \label{cor: stessafun}
+    Note that if $\nu$ is a function with the same properties as $\mu$, and if it satisfies $d(\nu(a,b), \mu(a,b)) \leq \co  \cdot \overline{V}(b - a)$ for every $a \leq b$, then $\nu$ will define the same multiplicative function $u$ as $\mu$.
+\end{corollary}
+
+\section{The Integral Product}
+
+As in the additive case, we have a result similar to a \textit{``Riemann product''}.
+
+\begin{prop} \label{prop: riemann_prod}
+    Let $\sigma = \{t_i\}$ be a finite subdivision of $[a,b]$.
+    Define $\delta = \sup_i |t_{i+1} - t_i|$. Then
+    $$
+    \lim_{\delta \to 0} \prod_i \mu(t_i, t_{i+1}) = u(a,b).
+    $$
+\end{prop} 
+
+\begin{proof}
+ We have
+$$
+d(u(a,b), \prod_i \mu(t_i, t_{i+1})) = d(\prod_i u(t_i, t_{i+1}), \prod_i \mu(t_i, t_{i+1})).
+$$
+Using the inequality
+$$
+|u(t_i, t_{i+1}) - \mu(t_i, t_{i+1})| \le \co  \cdot \overline{V}(t_{i+1} - t_i),
+$$
+and using the fact that for $w,x,y,z\in\mathcal{M}$
+\begin{align*}
+    d(wx,yz) &\le d(wx, wz) + d(wz, yz) \\
+    &\le |w| d(x,z) + |z| d(w,y) \le \co  \cdot (d(x,z) + d(w,y)),
+\end{align*}
+we get
+$$
+d(u(a,b), \prod_i \mu(t_i, t_{i+1})) \le \co  \cdot \sum_i \overline{V}(t_{i+1} - t_i).
+$$
+Since $\overline{V}(\delta) / \delta \le \epsilon$ as $\delta \to 0$, we can bound the sum:
+$$
+\sum_i \overline{V}(t_{i+1} - t_i) \le \epsilon \sum_i (t_{i+1} - t_i) = \epsilon (b - a).
+$$
+Therefore,
+$$
+d(u(a,b), \prod_i \mu(t_i, t_{i+1})) \le \co  \cdot \epsilon (b - a).
+$$
+As $\delta \to 0$, also $\epsilon \to 0$, which implies
+$$
+\lim_{\delta \to 0} \sum_i \mu(t_i, t_{i+1}) = u(a,b).
+$$   
+\end{proof}
+
+
+    Let $t\to A_t$ a $\mathcal{C}^\alpha$ function with values in a Banach Algebra $\mathcal{A}$ with a unit element $I$. Put $A_{ab} = A_b-A_a$ and
+    $$
+    \mu(a,b) = I + A_{ab}.
+    $$
+    Obviously $\mu(a,a) = I$ and we get for $a<c<b$
+    \begin{align*}
+        \mu(a,b)-\mu(a,c)\mu(c,b) &= I + A_{ab} - (I + A_{ac})(I + A_{cb})\\
+        &= A_{ab}-A_{ac} - A_{cb} - A_{ac}A_{cb}\\
+        &= -A_{ac}A_{cb}.
+    \end{align*}
+    Then
+    $$
+    d(\mu(a,b),\mu(a,c)\mu(c,b)) = \|-A_{ac}A_{cb}\| \le \|A\|_\alpha^2\cdot (b-a)^{2\alpha}.
+    $$
+    Therefore, since $V(t) = t^{2\alpha}$ is a strong control function, the multiplicative sewing lemma applies, giving us a function $u$ such that
+    $$
+    d(u(a,b), \mu(a,b)) \le \co \cdot (b-a)^{2\alpha}.
+    $$
+    Because of the the last proposition, a good notation for this function is
+    $$
+    u(a,b) = \prod_a^b(I+dA_s).
+    $$
+    
+    We can also take $\nu(a,b) = e^{A_{ab}}$, it satisfies $\nu(a,a) = I$ and 
+    \begin{align*}
+        e^{A_{ab}} - &e^{A_{ac}}e^{A_{cb}} = e^{A_b-A_a} - e^{A_c-A_a}e^{A_b-A_c}\\
+        &= \sum_{k\ge0}\frac{1}{k!}(A_b-A_a)^k \\
+        &\quad- \left(\sum_{k\ge0}\frac{1}{k!}(A_c-A_a)^k\right)\cdot\left(\sum_{k\ge0}\frac{1}{k!}(A_b-A_c)^k\right)\\
+        &= \sum_{k\ge2}\frac{1}{k!}(A_b-A_a)^k \\
+        &\quad- \left(\sum_{k\ge2}\frac{1}{k!}(A_c-A_a)^k\right)\cdot\left(\sum_{k\ge2}\frac{1}{k!}(A_b-A_c)^k\right)\\
+        &\quad - (A_c-A_a)(A_b-A_c).
+    \end{align*}
+    We can bound this expression using the fact that
+    \begin{align*}
+    \|\sum_{k\ge2}\frac{1}{k!}(A_b-A_a)^k\| &\le \sum_{k\ge2}\frac{1}{k!}\|A\|_\alpha^k(b-a)^{\alpha k}\\
+    &= \sum_{k\ge2}\frac{1}{k!}\|A\|_\alpha^k(b-a)^{\alpha (k-2)}(b-a)^{2\alpha}\\
+    &= \sum_{k\ge2}\frac{1}{k!}\|A\|_\alpha^k\cdot T^{\alpha (k-2)} \ (b-a)^{2\alpha}\\
+    &\le \co  \cdot (b-a)^{2\alpha}
+    \end{align*}
+    so that
+    $$
+    d(\nu(a,b), \nu(a,c)\nu(c,b)) \le \co  \cdot (b-a)^{2\alpha}.
+    $$
+    Also, in a similar way
+    \begin{align*}
+        e^{A_{ab}}-(I + A_{ab}) &= \sum_{k\ge0}\frac{1}{k!}(A_b-A_a)^k - I -A_b + A_a\\
+        &= \sum_{k\ge2}\frac{1}{k!}(A_b-A_a)^k,
+    \end{align*}
+    so we get that
+    $$
+    d(\nu(a,b), \mu(a,b)) \le \co \cdot(b-a)^{2\alpha}.
+    $$
+    Because of Corollary \ref{cor: stessafun}, we get the same $u$ by using $\nu$ instead of $\mu$. Therefore, we can also write $u(a,b)$ as:
+    $$
+    u(a,b) = \prod_a^b (I + dA_t) = \prod_a^b e^{dA_t}.
+    $$
+
+\begin{theorem} \label{teo: sol_eq_diff}
+    Let $U_t = u(0,t)$. Then this is a solution to the ODE:
+    \begin{equation} \label{eq:eq-diff}
+        U_t = I + \int_0^t U_s \,dA_s
+    \end{equation}
+    where the integral is taken in the Young sense.
+\end{theorem}
+\begin{proof}
+    Since $U_0 = u(0,0) = I$, we only need to show that $U_t$ is the function that we get using the additive sewing lemma on  $\xi(a,b) = U_a A_{ab}$. This means we only have to verify that
+    $$
+    \|U_b - U_a - U_aA_{ab}\| \le \co  \cdot (b-a)^{2\alpha}.
+    $$
+    The left hand side is worth
+    \begin{align*}
+         \|U_b - U_a - U_aA_{ab}\| &= \|u(0,b) - u(0,a) - u(0,a)A_{ab}\|\\
+         &= \|u(0,a)\cdot(u(a,b) - I - A_{ab})\|\\
+         &\le \|u(0,a)\|\cdot\|u(a,b) - \mu(a,b)\|\\
+         &\le \co \cdot(b-a)^{2\alpha}
+    \end{align*}
+    so we are done.
+    
+\end{proof}
+
+We will study better this equation in Chapter \ref{ch: eqdiff}.
+
+\section{A Trotter Type Formula}
+
+Let $A, B\in \calpha[\mathcal A]$ as before, and define now
+$$
+\mu(a,b) = (I + A_{ab})(I+B_{ab}).
+$$
+This function satisfies, for $a\le c\le b$:
+\begin{align*}
+    d(\mu(a,b), \mu(a,c)&\mu(c,b)) = \|\mu(a,b) - \mu(a,c)\mu(c,b)\| \\
+    &= \| (I + A_{ab})(I+B_{ab})\\
+    &\quad - (I + A_{ac})(I+B_{ac})(I + A_{cb})(I+B_{cb}) \|,
+\end{align*}
+and it is easy to verify that
+$$
+d(\mu(a,b), \mu(a,c)\mu(c,b)) \le \co \cdot|b-a|^{2\alpha}.
+$$
+As before, we can apply the Multiplicative Sewing Lemma and obtain the function
+$$
+u(a,b) = \prod_a^b (I + dA_t)(I + dB_t) = \prod_a^b e^{dA_t}e^{dB_t}.
+$$
+By Proposition \ref{prop: riemann_prod} we can write 
+$$
+u(a,b) = \lim_{n\to+\infty}\prod_{i = 0}^{2^n - 1} e^{A_{t_i t_{i+1}}}e^{B_{t_i t_{i+1}}},
+$$
+for
+$$
+t_i = a + i \cdot \frac{b-a}{2^n}.
+$$
+Defining $C = A+B$ we can observe that the function
+$$
+\nu(a,b) = I + C_{ab}
+$$
+is such that 
+$$
+d(\nu(a,b), \mu(a,b)) \le \co  \cdot |b-a|^{2\alpha}
+$$
+so that they define the same $u$. By applying Theorem \ref{teo: sol_eq_diff} we then have that
+\begin{equation} \label{eq: miservesoloqui}
+    u(0,t) = I + \int_0^t u(0,s) \, dC_s.
+\end{equation}
+
+In particular, we can fix $A,B\in\mathcal{A}$ and apply what we said to the functions $t \mapsto tA$ and $t\mapsto tB$, which are obviously $\alpha$-H\"older continuous whith $\alpha = 1$. We get a function $u(a,b)$, and by \eqref{eq: miservesoloqui}
+$$
+u(0,t) = e^{t(A+B)}.
+$$
+With $t = 1$ we get the classical Lie-Trotter formula:
+\begin{align*}
+    e^{A+B} = u(0,1) &= \lim_{n\to+\infty}\prod_{i = 0}^{2^n - 1} e^{A_{t_i t_{i+1}}}e^{B_{t_i t_{i+1}}} \\
+    &= \lim_{n\to+\infty}\prod_{i = 0}^{2^n - 1} e^{A/2^n}e^{B/2^n} \\
+    &= \lim_{n\to+\infty}\left(e^{A/2^n}e^{B/2^n}\right)^{2^n}.
+\end{align*}

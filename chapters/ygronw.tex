@@ -1,0 +1,101 @@
+\chapter{Proof of Young-Gr\"onwall's Lemma}\label{app: yg}
+
+We will now state and prove the Young-Gr\"onwall's Lemma that we used in Chapter \ref{ch: eqdiff}. We will state and prove a more precise version of Lemma \ref{lemma:YG}, in which we specify the dependence of the constant from the other parameters. We will also make heavier use of the notation introduced in Appendix \ref{app: notaz}.
+
+\begin{lemma} [Young-Gr\"onwall] \label{lemma:YGapp}
+
+Let $\alpha, \beta \in (0, 1]$, with $\alpha + \beta > 1$ and $\beta>\alpha$, consider the following functions:
+$$
+a \in C^{\alpha}([0,T]; \mathbb{R}^d), \quad
+%b &\in C^{\alpha}([0,T]; \mathbb{R}^{d \times k}), \\
+u \in C^{\alpha}([0,T]; \mathbb{R}^{d\times (k \times d)}), \quad
+y \in C^{\beta}([0,T]; \mathbb{R}^k).
+$$
+
+These functions satisfy the integral equation:
+\begin{equation}
+a_t = a_0 + \int_0^t ua \, dy, \quad \text{for every } t \in [0,T]. \label{eq:integral-equation}
+\end{equation}
+
+Then, there exists a constant $\co = \co (\alpha, \beta, T, \|u\|_\alpha, [\delta y]_\beta)$ such that:
+\begin{equation} \label{eq: risYG}
+\|a\|_{\beta} \leq \co  \cdot |a_0| . 
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+    From an application of the Sewing Lemma, just like in \ref{prop: YisalphaH} we can easily get that 
+    \begin{equation} \label{eq: stimafattabene}
+        |\delta a_{st}| = \left|\int_s^t ua \, dy\right| \le \ct\cdot\|u\|_\alpha\|a\|_\alpha[\delta y]_\beta|\delta_{st}|^\beta,
+    \end{equation}
+    with, here and below, $\ct \coloneq \co(\alpha, \beta)\cdot(1+T^\alpha)$, hence $\|a\|_\beta < +\infty$. To get \eqref{eq: risYG} we can write
+    $$
+    \delta a_{st} = \int_s^t ua_0 \, dy + \int_a^b u(a-a_0) \, dy
+    $$
+    and estimate the two terms individually. For the first one, we can proceed as in \eqref{eq: stimafattabene} and get
+    $$
+    \left|\int_s^tua_0\,dy\right| \le \ct\cdot\|u\|_\alpha|a_0|[\delta y]_\beta|\delta_{st}|^\beta.
+    $$
+    For the second one, we have in a similar way
+    \begin{align*}
+        \left|\int_a^b u(a-a_0) \, dy\right| &\le \ct\cdot\|u(a-a_0)\|_\alpha[\delta y]_\beta|\delta_{st}|^\beta \\
+        &\le \ct\cdot\|u\|_\alpha[\delta a]_\beta T^{\beta - \alpha}[\delta y]_\beta|\delta_{st}|^\beta.
+    \end{align*}
+    Assume now that $T$ is small enough so that 
+    \begin{equation} \label{eq: condizione}
+        \co \cdot (1 + T^\alpha) \|u\|_\alpha T^{\beta - \alpha}[\delta y]_\beta \le \frac{1}{2},
+    \end{equation}
+    then we get
+    $$
+    \left|\int_a^b u(a-a_0) \, dy\right| \le \frac{1}{2}[\delta a]_\beta|\delta_{st}|^\beta\le
+    \frac{1}{2}\| a\|_\beta|\delta_{st}|^\beta.
+    $$
+    In this case, putting all together, we get 
+    $$
+    |\delta a_{st}| \le \ct\cdot \|u\|_\alpha|a_0|[\delta y]_\beta|\delta_{st}|^\beta + \frac{1}{2} \| a\|_\beta|\delta_{st}|^\beta,
+    $$
+    so that
+    $$
+    [a]_\beta \le \ct\cdot \|u\|_\alpha|a_0|[\delta y]_\beta + \frac{1}{2} \| a\|_\beta
+    $$
+    and
+    $$
+    \|a\|_\beta \le |a_0| + \ct\cdot \|u\|_\alpha|a_0|[\delta y]_\beta + \frac{1}{2} \| a\|_\beta.
+    $$
+    Then \eqref{eq: risYG} holds with $\co \coloneq 2(1 + \ct\cdot \|u\|_\alpha[\delta y]_\beta)$.
+
+    For a general $T$, we introduce a partition $\{t_0 = 0, t_1, \ldots, t_n = T\}$ such that for each $I_i = [t_i, t_{i+1}]$, \eqref{eq: condizione} holds with $\delta_{t_{i}t_{i+1}}$ instead of $T$. This can be achieved with $n$ depending on $T, \|u\|_\alpha,[\delta y]_\beta$ (over the entire interval) only. We can also choose the partition such that $\delta_{t_{i}t_{i+1}} \le 1$ for every $i$.
+
+    Let also $\|a\|_{\beta, i}$ be the norm of $a$ restricted to the interval $I_i$, we will now prove by induction that $\|a\|_{\beta, i} \le \co^{i+1} \cdot |a_0|$ for every $i< n$.
+    
+    The base case is exactly what we showed in the first part of the proof, also, with the same reasoning, we get for $i>0$:
+    $$
+    \|a\|_{\beta, i} \le \co \cdot |a_{t_i}|.
+    $$ 
+    Now we treat the two cases $|a_{t_i}|\le|a_{t_{i-1}}|$ and $|a_{t_i}|>|a_{t_{i-1}}|$ individually.
+
+    In the first case, we immediately get 
+    $$
+    \|a\|_{\beta, i} \le \co \cdot |a_{t_i}| \le \co \cdot |a_{t_{i-1}}|\le\co \cdot (|a_{t_{i-1}}| + [\delta a]_{\beta, i-1})\le \co\cdot\|a\|_{\beta, i-1},
+    $$
+    while for the second one, we can use that $|a_{t_i}|-|a_{t_{i-1}}| = |a_{t_i}-a_{t_{i-1}}|$ and 
+    $$
+    |a_{t_i} - a_{t_{i-1}}| \le [\delta a]_{\beta, i-1}\cdot\delta_{t_it_{i-1}}\le [\delta a]_{\beta, i-1},
+    $$
+    since $\delta_{t_it_{i-1}}\le1$, so that 
+    $$
+    \|a\|_{\beta, i} \le \co \cdot |a_{t_i}| \le \co\cdot (|a_{t_{i-1}}| + [\delta a]_{\beta, i-1})\le \co\cdot\|a\|_{\beta, i-1}.
+    $$
+    In both cases, using the inductive hypothesis, we obtain 
+    $$\|a\|_{\beta, i} \le \co^{i+1} \cdot |a_0|,$$
+    as desired.
+
+    Finally, given \( s \in I_i \) and \( t \in I_j \) with \( s \neq t \), assuming without loss of generality that \( i < j \), we have
+    \begin{align*}
+        | \delta a_{st} | &\leq | \delta a_{st_{i+1}} | + \sum_{k=i+1}^{j-1} | \delta a_{t_k t_{k+1}} | + | \delta a_{t_j t} |\\
+        &\leq \co \cdot \|a\|_{ \beta,i} | \delta_{ st_{i+1}} |^\beta + \sum_{k=i+1}^{j-1} \co \cdot \|a\|_{ \beta,k} | \delta_{ t_k t_{k+1}} |^\beta + \co \cdot \|a\|_{ \beta,j} | \delta_{ t_j t} |^\beta \\
+        &\leq \sum_{k=i}^{j} \co \cdot \|a\|_{ \beta,k} | \delta _{st} |^\beta \leq n \co^{n+1} \cdot |a_0|| \delta _{st} |^\beta,
+    \end{align*}
+    hence the thesis follows with the constant $1+n\co^{n+1}$.
+    
+\end{proof}

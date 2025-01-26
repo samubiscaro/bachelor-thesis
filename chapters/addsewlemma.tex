@@ -1,0 +1,526 @@
+\chapter{The Additive Sewing Lemma}
+
+\epigraph{Manuscripts don’t burn.}{Mikhail Bulgakov,  \\ \textit{The Master and Margarita} }
+
+The \textit{Sewing Lemma} \cite{GUBINELLI200486, 10.1214/EJP.v11-356} was introduced as a powerful analytical tool to study integration when dealing with functions of low regularity . It allows for the unique definition of integrals of the form 
+$$ I_t = \int_0^t X_s \, dY_s, $$
+in cases where both \( X \) and \( Y \) are not necessarily smooth. For example, in the so-called \textit{Young regime}, where \( X \) and \( Y \) have Hölder regularities \( \alpha \) and \( \beta \), respectively, with \( \alpha + \beta > 1 \), a classical result by Young \cite{10.1007/BF02401743} and Kondurar \cite{zbMATH03027263} establishes that a well-defined integration theory exists. The Sewing Lemma generalizes this result, proving the existence and uniqueness of a function \( I : [0, T] \to \mathbb{R} \) such that
+$$
+|I_b - I_a - Y_a(X_b - X_a)| \le \co \cdot |b - a|^{\alpha + \beta}.
+$$
+This provides a rigorous foundation for integration in low-regularity settings, enabling its use in various applications.
+
+
+\section{Control Functions}
+
+Before introducing the Sewing Lemma, it is necessary to define a more general notion of modulus of continuity.
+
+\begin{definition} \label{def: contfunc}
+    We say that a real valued function $V(t)$ defined on $\left[0, T\right]$ is a \textit{control function} if it is non decreasing, $V(0) = 0$ and 
+    \begin{equation}
+       \sum_{n\geq1}V(1/n)<+\infty. 
+    \end{equation} 
+\end{definition}
+
+\begin{remark}
+    The final condition is equivalent to
+    \begin{equation}
+        \overline{V}(t) = \sum_{k \geq 0} 2^k \cdot V(2^{-k} \cdot t) < +\infty,
+    \end{equation}
+    which is a more convenient form, as we shall see.
+
+    Also, we have
+    $$
+    \overline{V}(t) = V(t) + \cdots + 2^nV(2^n\cdot t) + 2^{n+1}\overline{V}(2^{-n-1}\cdot t) 
+    $$
+    from which follows that
+    \begin{equation} \label{eq:limVbaradd}
+        \lim_{n\to+\infty} 2^n\cdot\overline{V}(2^{-n}\cdot t) = 0
+    \end{equation}
+\end{remark}
+
+\begin{ex} \label{ex: t^alpha}
+    A common control function is $V(t) = t^\alpha$ with $\alpha > 1$, in fact in this case:
+
+    \begin{align*}
+        \overline{V}(t) &= \sum_{k\ge0}2^k \cdot V(2^{-k}\cdot t) = \sum_{k\ge0}2^k \cdot t^{\alpha}\cdot 2^{-\alpha k} \\
+        &= t^{\alpha} \cdot \sum_{k\ge0}2^{(1-\alpha)k} < +\infty
+    \end{align*}
+    since $1-\alpha<0$.
+\end{ex}
+
+\begin{ex}
+    We can also consider the function defined on $[0,1]$
+    $$
+    V(t) = \frac{t}{(\ln(t^{-1}))^\alpha},
+    $$
+    with $\alpha>1$. Obviously $V(0) = 0$ and by taking the derivative we get
+    $$\alpha\ln(t^{-1})^{-\alpha-1} + \ln(t^{-1})^{-\alpha} > 0 \quad \forall t \in [0,1],$$
+    so $V$ is also increasing. Lastly,
+    \begin{align*}
+        \overline{V}(t) &= \sum_{k\ge0} 2^k \cdot V(2^{-k}\cdot t) 
+        = \sum_{k\ge0} 2^k \cdot \frac{2^{-k} \cdot t}{(\ln(2^k \cdot t^{-1}))^\alpha} \\
+        &= t \cdot \sum_{k\ge0} \frac{1}{(k\ln2 + \ln(t^{-1}))^\alpha} < +\infty.
+    \end{align*}
+\end{ex}
+
+\section{The Additive Sewing Lemma}
+
+\begin{theorem} \label{teo: addsewlemma}
+    Consider a continuous function $\mu(a,b)$ with real values defined for $0 \leq a \leq b \le T$, satisfying the relation
+    $$
+    |\mu(a,b) - \mu(a,c) - \mu(c,b)| \leq V(b-a)
+    $$
+    for every $c \in [a,b]$, where $V$ is a control function. Then, there exists a unique function $\phi(t)$ on $[0, T]$, up to an additive constant, such that
+    $$
+    |\phi(b) - \phi(a) - \mu(a,b)| \leq \overline{V}(b-a).
+    $$
+\end{theorem}
+
+We will prove this result in the course of this section.
+
+First, let $\mu_0(a,b) = \mu(a,c) + \mu(c,b)$ for $c = (a+b)/2$, and define recursively $\mu_{n+1}(a,b) = \mu_n(a,c) + \mu_n(c,b)$. 
+
+\begin{lemma} \label{lemma: stima}
+    Let $\mu_n$ as before, then for $n \ge 0$, we obtain
+    $$
+    |\mu_{n}(a,b) - \mu_{n+1}(a,b)| \le 2^n\cdot V(2^{-n} \cdot|b-a|).
+    $$
+\end{lemma}
+
+\begin{proof}
+    We show this by induction. For $n = 0$, this is exactly the assumed relation. For $n > 0$, we have: 
+    \begin{align*}
+        |\mu_{n}(a,b) - \mu&_{n+1}(a,b)| = |\mu_{n-1}(a,c) + \mu_{n-1}(c,b) - \mu_{n}(a,c) - \mu_{n}(c,b)|\vphantom{\frac{|b-a|}{2}}\\
+        &\le 2^{n-1} \cdot V(2^{-n+1}\cdot |c-a|) + 2^{n-1}\cdot V(2^{-n+1} \cdot |b-c|)\\
+        &= 2^{n-1} \cdot V\left(2^{-n+1} \cdot \frac{|b-a|}{2}\right) + 2^{n-1} \cdot V\left(2^{-n+1} \cdot \frac{|b-a|}{2}\right)\\
+        &= 2^n \cdot V(2^{-n}\cdot |b-a|).
+    \end{align*}
+\end{proof}
+
+From this, it follows that
+
+\begin{prop}
+    The sequence $\mu_n$ converges uniformly to a limit $u$.
+\end{prop}
+
+\begin{proof}
+    Because of Lemma \ref{lemma: stima}, the series 
+    $$\sum_{n \ge 0} |\mu_{n}(a,b) - \mu_{n+1}(a,b)| \le \overline{V}(b-a)$$
+    converges, so
+$$
+\mu_{n}(a,b) = \sum_{k = 0}^{n-1} \mu_{k+1}(a,b) - \mu_{k}(a,b)
+$$ 
+converges to a limit $u(a,b)$. Since $V$ is non-decreasing, we have uniform convergence because for every $0 \leq a \leq b \leq T$:
+\begin{align*}
+    |\mu_{n}(a,b) - u(a,b)| &\leq \sum_{k \geq n} |\mu_{k}(a,b) - \mu_{k+1}(a,b)| \\
+    &\leq \sum_{k \geq n} 2^k\cdot V(2^{-k}\cdot(b-a)) \\
+    &\leq \sum_{k \geq n} 2^k\cdot V(2^{-k}\cdot T),
+\end{align*}
+which tends to zero since the sum is convergent.
+
+\end{proof}
+
+Note that, since $\mu$ is continuous, so are all the $\mu_n$, then the limit $u$ is also continuous because we have uniform convergence.
+
+Also, for $c = (a+b)/2$, $\mu_{n+1}(a,b) = \mu_{n}(a,c) + \mu_{n}(c,b)$, which implies
+$$
+u(a,b) = u(a,c) + u(c,b).
+$$
+We say that $u$ is \textit{midpoint-additive}.
+
+Also, we have that 
+\begin{align*}
+    |u(a,b) - \mu(a,b)| &\le \sum_{n \ge 0} |\mu_{n}(a,b) - \mu_{n+1}(a,b)| \\ &=\overline{V}(b-a).
+\end{align*}
+
+This function $u$ is actually the only function satisfying this properties, indeed we have
+
+\begin{prop} \label{prop: unica_midadd}
+    Let $v(a,b)$ be a midpoint-additive function such that for every $0\le a\le b\le T$:
+    $$
+    |v(a,b) - \mu(a,b)| \le \co  \cdot \overline{V}(b-a),
+    $$
+    then $v = u$.
+\end{prop}
+
+
+Where, here and in the following, $\co$ will denote a costant.
+\begin{proof}
+    Let $v$ be such a function, then we obtain for a constant $K$ that
+    $$
+    |v(a,b) - u(a,b)| \le K \cdot \overline{V}(b-a).
+    $$
+    By induction, assuming 
+    $$|v(a,b) - u(a,b)| \le 2^{n-1 }K \cdot \overline{V}(2^{-n+1}\cdot (b-a))$$ 
+    we have
+    \begin{align*}
+        |v(a,b) - u(a,b)| &= |v(a,c) + v(c,b) - u(a,c) - u(c,b)|\\
+        &\le 2^{n-1} K \cdot \overline{V}\left(2^{-n+1} (c-a)\right)\\
+        &\quad+ 2^{n-1} K \cdot \overline{V}(2^{-n+1} (b-c))\\
+        &\le 2^n K \cdot \overline{V}(2^{-n} (b-a)),
+    \end{align*}   
+    which vanishes as $n \to \infty$, as shown in \eqref{eq:limVbaradd}, so that $v = u$.
+    
+\end{proof}
+
+We will now show that the function $u$ is \textit{additive}, meaning that for every $a\le c \le b$:
+$$
+u(a,c) + u(c,b) = u(a,b).
+$$
+
+To do so, let $k$ be an integer with $k \ge 3$, and define the function
+$$
+w(a,b) = \sum_{i=0}^{k-1} u(t_i, t_{i+1}),
+$$
+where $t_i = a + i \cdot \frac{b-a}{k}$. 
+
+\begin{prop}
+    The function $w$ is midpoint-additive and satisfies 
+    \begin{equation} \label{eq: dis_wu}
+        |w(a,b) - u(a,b)| \le \co  \cdot \overline{V}(b-a).
+    \end{equation}
+\end{prop}
+
+\begin{proof}
+    To prove midpoint-additivity, set $s_i = a + i \cdot \frac{b-a}{2k}$, for $c = \frac{a+b}{2}$ we have
+\begin{align*}
+    w(a,c) + w(c,b) &= \sum_{i=0}^{k-1} u(s_i, s_{i+1}) + \sum_{i=k}^{2k-1} u(s_i, s_{i+1})\\
+    &= \sum_{i=0}^{2k-1} u(s_i, s_{i+1}) = \sum_{i=0}^{k-1} u(t_i, t_{i+1})\\
+    &= w(a,b).
+\end{align*}
+In the last step, we used the fact that $u$ is midpoint-additive. Thus, $w$ is also midpoint-additive.
+
+For proving \eqref{eq: dis_wu}, we have 
+\begin{align*}
+    |w(a,b)-\mu(a,b)| &= |\sum_{i=0}^{k-1} u(t_i, t_{i+1}) - \mu(a,b)| \\
+    &\le |\sum_{i=0}^{k-1} u(t_i, t_{i+1}) - \sum_{i=0}^{k-1} \mu(t_i, t_{i+1})|\\
+    &\quad+ |\sum_{i=0}^{k-1} \mu(t_i, t_{i+1}) - \mu(a,b)|.
+\end{align*}
+
+For the first term, we get
+$$
+|\sum_{i=0}^{k-1} u(t_i, t_{i+1}) - \sum_{i=0}^{k-1} \mu(t_i, t_{i+1})| \le k\cdot \overline{V}(\frac{b-a}{i}) \le \co_k \cdot \overline{V}(b-a).
+$$
+While for the second one, we proceed by induction. We know that for $c\in [a,b]$ it is true that ${|\mu(a,b) - \mu(a,c) - \mu(c,b)| \leq V(b-a)}$, suppose that for every $a$, $b$:
+$$
+|\mu(a,b) - \sum_{i=0}^{k-2} \mu(t_i, t_{i+1}) - \mu(t_k,b) | \le \co _{k-1} \cdot \overline{V}(b-a),
+$$
+then
+\begin{align*}
+    |\mu(a,b) &- \sum_{i=0}^{k-1} \mu(t_i, t_{i+1})| = |\mu(a,b) - \sum_{i=0}^{k-2} \mu(t_i, t_{i+1}) - \mu(t_{k-1},b) | \\
+    &\le |\mu(a,b) - \mu(a, t_{k-1}) - \mu(t_{k-1},b) | \\
+    &\quad+ |\mu(a,t_{k-1}) - \sum_{i=0}^{k-2} \mu(t_i, t_{i+1})|\\
+    &\le \co \cdot \overline{V}(b-a) + \co _{k-1}\cdot \overline{V}(t_{k-1}-a) \le \co _k \cdot \overline{V}(b-a).
+\end{align*} 
+Hence,
+$$
+|w(a,b) - \mu(a,b)| \le \co_k \cdot \overline{V}(b-a).
+$$
+\end{proof}
+
+This implies that $w = u$, meaning that $u$ is actually \textit{rationally additive}. Since $u$ is continuous, it is additive over the entire interval. Therefore, we can define
+$$
+\phi(t) = u(0, t).
+$$
+This shows that $\phi(t)$ is the desired function, uniquely determined up to an additive constant, and this concludes the proof of Theorem \ref{teo: addsewlemma}.
+
+Note that in this proof we also shown that
+\begin{corollary}
+    Let $\mu$ as in Theorem \ref{teo: addsewlemma}, then there exist a unique additive function $u(a,b)$ such that
+    $$
+    |u(a,b) - \mu(a,b)| \le \co  \cdot \overline{V}(b-a)
+    $$
+    for every $a\le b$.
+\end{corollary}
+
+The same proof works in general for a function $\mu$ with values in a Banach space $X$, in particular for a matrix-valued function.
+
+\section{The Young Integral}
+
+To appreciate the importance of this result we will derive some important conclusions from \textit{Young's integration theory}. To do so, we will need the following proposition about \textit{Riemann sums}.
+
+\begin{prop}
+    Let $\sigma = \{t_i\}$ be a finite subdivision of $[a,b]$.
+    Define $\delta = \sup_i |t_{i+1} - t_i|$. Then
+    $$
+    \lim_{\delta \to 0} \sum_i \mu(t_i, t_{i+1}) = \phi(b) - \phi(a),
+    $$
+    where $\mu$ and $\phi$ are as above.
+\end{prop} 
+
+\begin{proof}
+ We have
+$$
+\phi(b) - \phi(a) - \sum_i \mu(t_i, t_{i+1}) = \sum_i [\phi(t_{i+1}) - \phi(t_i) - \mu(t_i, t_{i+1})].
+$$
+Using the inequality
+$$
+|\phi(t_{i+1}) - \phi(t_i) - \mu(t_i, t_{i+1})| \le \overline{V}(t_{i+1} - t_i),
+$$
+we get
+$$
+\left|\phi(b) - \phi(a) - \sum_i \mu(t_i, t_{i+1})\right| \le \sum_i \overline{V}(t_{i+1} - t_i).
+$$
+Since $\overline{V}(\delta) / \delta \le \epsilon$ as $\delta \to 0$, we can bound the sum:
+$$
+\sum_i \overline{V}(t_{i+1} - t_i) \le \epsilon \sum_i (t_{i+1} - t_i) = \epsilon (b - a).
+$$
+Therefore,
+$$
+\left|\phi(b) - \phi(a) - \sum_i \mu(t_i, t_{i+1})\right| \le \epsilon (b - a).
+$$
+As $\delta \to 0$, also $\epsilon \to 0$, which implies
+$$
+\lim_{\delta \to 0} \sum_i \mu(t_i, t_{i+1}) = \phi(b) - \phi(a).
+$$   
+\end{proof}
+
+We are now ready to define the \textit{Young Integral}.
+
+Let $x$ and $y$ be two real valued $\alpha$-H\"older continuous functions on $[0,T]$, with $\alpha > 1/2$. We can define
+$$
+\mu(a,b) = x_a (y_b - y_a),
+$$
+so that
+$$
+\mu(a,b) - \mu(a,c) - \mu(c,b) = -(x_c - x_a)(y_b - y_c),
+$$
+which leads to
+$$
+|\mu(a,b) - \mu(a,c) - \mu(c,b)| \le \|x\|_\alpha \|y\|_\alpha |b-a|^{2\alpha},
+$$
+where $\|x\|_\alpha$ denotes the norm in the space $\mathcal{C}^\alpha$ (see Section \ref{sec: normecalpha}). \\
+The function $V(t) = t^{2\alpha}$, since $2\alpha>1$, is indeed a control function, as in example \ref{ex: t^alpha}.
+This means that the additive sewing lemma applies, giving us a function $\phi$. We can then define the integral as
+$$
+\int_a^b x_t \, dy_t = \phi(b) - \phi(a),
+$$
+so that
+$$
+\int_a^b x_t \, dy_t = \lim_{\delta\to0} \sum_i x_{t_i} (y_{t_{i+1}}-y_{t_i})
+$$
+where ${t_i}$ is a partition of $[a,b]$ and $\delta = \sup(t_{i+1}-t_i)$. This integral is known as the Young integral.
+
+\begin{remark}
+    It is also possible to take \( x \in \mathcal{C}^\alpha \) and \( y \in \mathcal{C}^\beta \) as long as \( \alpha + \beta > 1 \), but this would unnecessarily complicate the notation, since we will only consider the case \( \alpha = \beta \) in this thesis.
+\end{remark}
+
+\begin{prop} \label{prop: linearity_of_young}
+    Given \( w, x, y, z \in \mathcal{C}^\alpha([0,T], \mathbb{R}) \) and \( \gamma, \delta \in \mathbb{R} \), applying the Sewing Lemma to
+    $$
+    \mu(a,b) = \delta w_a(x_b - x_a) + \gamma y_a(z_a - z_b)
+    $$
+    yields 
+    \begin{equation} \label{eq: linearity}
+        \delta \int_a^b w_t \, dx_t + \gamma \int_a^b y_t \, dz_t.
+    \end{equation}
+    To simplify the notation, we will often use the following shorthand:
+    $$
+    \int_a^b (\delta w_t \, dx_t + \gamma y_t \, dz_t).
+    $$
+\end{prop}
+
+\begin{proof}
+    By the definition of the Young integral, we know that
+    $$
+    \left| \int_a^b w_t \, dx_t - w_a(x_b - x_a) \right| \leq \co \cdot |b - a|^{2\alpha},
+    $$
+    and similarly,
+    $$
+    \left| \int_a^b y_t \, dz_t - y_a(z_b - z_a) \right| \leq \co \cdot |b - a|^{2\alpha}.
+    $$
+    Combining these inequalities, we get
+    \begin{align*}
+        \left| \delta \int_a^b w_t \, dx_t + \gamma \right.&\left. \int_a^b y_t \, dz_t - \left( \delta w_a(x_b - x_a) + \gamma y_a(z_b - z_a) \right) \right| \le \\
+        &\leq \delta \left| \int_a^b w_t \, dx_t - w_a(x_b - x_a) \right| \\
+        &\quad + \gamma \left| \int_a^b y_t \, dz_t - y_a(z_b - z_a) \right| \\
+        &\leq \co \cdot |b - a|^{2\alpha}.
+    \end{align*}
+    Since the expression in \eqref{eq: linearity} is additive, by the Sewing Lemma it is the unique solution constructed from the increments \( \mu(a,b) \).
+\end{proof}
+
+An obvious application of proposition \ref{prop: linearity_of_young} is that the functions
+$$
+x\mapsto\int_a^b x_t \, dy_t \quad \text{and} \quad y\mapsto\int_a^b x_t \, dy_t$$
+are linear. \\
+
+Note that even for matrix-valued functions
+$$
+A \in \mathcal{C}^\alpha([0,T], \mathbb{R}^{d \times d}) \quad \text{and} \quad B \in \mathcal{C}^\alpha([0,T], \mathbb{R}^{d \times d}),
+$$
+we can consider the increment \( \mu(a,b) = A_a(B_b - B_a) \), and the Sewing Lemma applies as before. This allows us to define the integral
+\begin{equation} \label{eq: intmatrici}
+    \int_a^b A_t \, dB_t.
+\end{equation}
+
+The integral we have just defined is quite natural. In fact, we have the following result:
+
+\begin{prop} \label{prop: hasenso}
+    Given \( A \) and \( B \) as above, for all \( i,j \in \{1, \ldots, d\} \), the components of the matrix-valued integral satisfy
+    $$
+    \left( \int_a^b A_t \, dB_t \right)^{ij} =  \int_a^b \sum_{k=1}^d A_t^{ik} \, dB_t^{kj}.
+    $$
+\end{prop}
+
+\begin{proof}
+    Let $M$ be the matrix that, for some $a<b$, has entries
+    $$
+    M^{ij} = \int_a^b (A_t \, dB_t)^{ij},
+    $$
+    where the right hand side is to be intended as the function that we get applying the Sewing Lemma to
+    $$
+    (A_a(B_b-B_a))^{ij}.
+    $$
+    Because of Proposition \ref{prop: linearity_of_young} it is clear that 
+    $$
+    M^{ij} = \int_a^b (A_t \, dB_t)^{ij} = \int_a^b \sum_{k=1}^d A_t^{ik} \, dB_t^{kj}.
+    $$
+    We only need to show that 
+    $$
+    M = \int_a^b A_t \, dB_t.
+    $$
+    This is another simple application of the Sewing Lemma, because for every $i,j$ we know that
+    $$
+    \left|
+        \int_a^b (A_t \, dB_t)^{ij} - \left(A_a(B_b-B_a)\right)^{ij}
+    \right| \le \co \cdot|b-a|^{2\alpha},
+    $$
+    then
+    \begin{align*}
+        \left|
+            M - A_a(B_b-B_a)
+        \right| &= 
+        \sum_{i,j}\left|
+            \int_a^b (A_t \, dB_t)^{ij} - \left(A_a(B_b-B_a)\right)^{ij}
+        \right| \\ &\le \co \cdot|b-a|^{2\alpha},
+    \end{align*}
+    and since $M$ is additive we obtain exactly the above equality.
+\end{proof}
+
+\begin{remark}
+    Of course, we do not need to restrict ourselves to square matrices; the only requirement is that \( A \) and \( B \) are compatible for multiplication. This more general setting introduces no additional complexity beyond a slight increase in notational burden. 
+\end{remark}
+
+Now that we are working with matrices, they may not commute. In fact, by applying the Sewing Lemma to the function
+$$
+\mu(a,b) = (B_b - B_a)A_a,
+$$
+we generally obtain a function that is different from \eqref{eq: intmatrici}. To denote this expression, we will use the notation
+$$
+\int_a^b dB_t \, A_t.
+$$
+We can obtain a result analogous to Proposition \ref{prop: hasenso} for this integral as well, and the proof follows the same reasoning.
+
+\section{Properties of the Young Integral}
+
+We will now derive some important properties of the Young integral, which will be useful in the following sections.
+
+\begin{prop} \label{prop: YisalphaH}
+    Let $A,B\in\calpha$. Then the functions
+    $$
+    I_t = \int_0^t A_s \, dB_s \quad\text{and}\quad J_t = \int_0^t dB_s \,A_s
+    $$
+    are $\alpha$-H\"older continuous.
+\end{prop}
+
+\begin{proof}
+    We need to consider, for $a<b$,
+    \[
+    |I_b - I_a| \leq |I_b - I_a - A_a(B_b - B_a)| + |A_a(B_b - B_a|).
+    \]
+    By the definition of the Young integral. For the first term, we have:
+    \[
+    |I_b - I_a - A_a(B_b - B_a)| \leq \co \cdot |b - a|^{2\alpha}.
+    \]
+    For the second term, using the continuity of the function \( A \), which implies it is bounded, we obtain:
+    \begin{align*}
+    |A_a(B_b - B_a)| &\leq |A_a| \cdot |B_b - B_a| \\
+    &\leq \sup_{0 \leq s \leq T} |A_s| \cdot |B_b - B_a| \\
+    &\leq \co \cdot |b - a|^{\alpha}.
+    \end{align*}
+    Combining the above results, we find:
+    \begin{align*}
+    |I_b - I_a| &\leq \co \cdot (|b - a|^{2\alpha} + |b - a|^{\alpha}) \\
+    &\leq \co \cdot (T^\alpha |b - a|^{\alpha} + |b - a|^{\alpha}) \\
+    &\leq \co \cdot |b - a|^{\alpha}.
+    \end{align*}    
+    In an analogous way, we can derive the same result for \( J \).
+\end{proof}
+
+The next property is also known as the \textit{transitivity} of the Young integral.
+
+\begin{prop} \label{prop: trans}
+    Let $A,B,C\in\calpha$, and
+    $$
+    I_t = \int_0^t B_s \, dC_s.
+    $$
+    Then
+    $$
+    \int_0^t A_s \,dI_s = \int_0^t A_sB_s \,dC_s.
+    $$
+\end{prop}
+
+\begin{proof}
+    We just need to prove that
+    $$
+    \left|
+        \int_a^b A_s \,dI_s - A_aB_a(C_b - C_a)
+    \right| \le \co \cdot |b-a|^{2\alpha}
+    $$
+    By definition
+    $$
+    \left|
+        \int_a^b A_s \,dI_s - A_a(I_b - I_a)
+    \right| \le \co \cdot |b-a|^{2\alpha},
+    $$
+    and
+    \begin{align*}
+        \left|
+            A_a(I_b - I_a) - A_aB_a(C_b - C_a)
+        \right| &\le |A_a| \cdot |I_b- I_a - B_a(C_b - C_a)|\\
+        &\le \co \cdot |b-a|^{2\alpha},
+    \end{align*}
+    where we used that $A$ is bounded and the definition of $I_t$. Putting all togheter, we get exacty what we wanted. Then, since 
+    $$
+    \int_a^b A_s \,dI_s
+    $$
+    is additive, by the Sewing Lemma it is indeed equal to
+    $$
+    \int_0^t A_sB_s \,dC_s.
+    $$
+\end{proof}
+Also, in a similar fashion, we can get
+\begin{prop} \label{prop: trans1}
+    Let $A,B,C\in\calpha$, and
+    $$
+    I_t = \int_0^t dA_s\,B_s.
+    $$
+    Then
+    $$
+    \int_0^t dI_s\,C_s = \int_0^t dA_s\,B_sC_s.
+    $$
+\end{prop}
+
+The last property we will prove is what is called the \textit{Integration by Parts formula}, and it states that
+
+\begin{theorem} \label{teo: intbypart}
+    Let $A,B\in\calpha$, then
+    $$
+    A_bB_b = A_aB_a + \int_a^b dA_s\,B_s + \int_a^b A_s\,dB_s
+    $$
+\end{theorem}
+
+\begin{proof}
+    We need to show that
+    \[
+    A_b B_b - A_a B_a = \int_a^b dA_s \, B_s + \int_a^b A_s \, dB_s.
+    \]
+    The function on the left-hand side is additive, so by Proposition \ref{prop: linearity_of_young} it suffices to show that
+    \[
+    \left| A_b B_b - A_a B_a - \left((A_b - A_a)B_a - A_a(B_b - B_a)\right) \right| \leq \co \cdot |b - a|^{2\alpha}.
+    \]
+    The left-hand side simplifies to \( (A_b - A_a)(B_b - B_a) \), which completes the proof.
+    
+\end{proof}
+

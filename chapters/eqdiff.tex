@@ -1,0 +1,241 @@
+\chapter{An Application to Quantum Computing} \label{ch: eqdiff}
+
+\epigraph{In a very real sense, every step we take is a combination of old certainties and new explorations. True science emerges when we manage to transform explorations into certainties.}{Douglas Hofstadter,  \\ \textit{G\"odel, Escher, Bach} }
+
+
+Remember that we had:
+
+\begin{postulate*}
+    In a quantum system with Hilbert space $\mathbb{H}$, every change of a pure state over time that is not caused by a measurement is described by the time evolution operator $U(t, t_0) \in \mathcal{U}(\mathbb{H})$.
+
+    Let $\lvert \psi(t_0) \rangle$ be the state at time $t_0$ and $\lvert \psi(t) \rangle$ be the state at time $t$. The time-evolved state $\lvert \psi(t) \rangle$ originating from the initial state $\lvert \psi(t_0) \rangle$ is given by:
+    \begin{equation}
+    \lvert \psi(t) \rangle = U(t, t_0) \lvert \psi(t_0) \rangle. \label{eq:time-evolution}
+    \end{equation}
+    
+    The time evolution operator $U(t, t_0)$ is the solution of the initial value problem:    
+    \begin{align}
+    i \frac{d}{dt} U(t, t_0) &= H(t) U(t, t_0), \nonumber \\
+    U(t_0, t_0) &= I, \label{eq:initial-value-problem}
+    \end{align}
+    
+    where $H(t)$ is the self-adjoint Hamiltonian operator, which generates the time evolution of the quantum system.
+\end{postulate*}
+
+We now aim to generalize this postulate to handle less regular Hamiltonians, this will enable more complex operations in quantum computing. For instance, we may want to apply quantum gates that depend on parameters varying them with low regularity. This flexibility proves valuable in rapidly expanding fields such as quantum machine learning and optimization. For instance, in \cite{farhi2014quantumapproximateoptimizationalgorithm}, a quantum optimization algorithm is introduced, where random ``rotations'' are applied to an initial random state. The goal is to apply as many of these transformations as possible, since in the limit, one approaches the desired optimal state. Instead of applying a sequence of multiple operators one after the other, the multiplicative sewing lemma can be employed to obtain a single operator equivalent to the product of all previous operators, in the limit as the number of terms approaches infinity.
+
+\section{A Generalisation of the Fourth Postulate}
+
+From now on we will consider a function $A \in \mathcal{C}^\alpha([0,T], L(\mathbb{H}))$, where $\alpha>1/2$; we will focus on the differential equation:
+\begin{equation}
+    \label{eq:eqdiff}
+    U_t = I + \int_0^t dA_s\, U_s.
+\end{equation}
+Note that it is equivalent to equation \ref{eq:initial-value-problem} if we set:
+\begin{align*}
+    U_t &= U(t, t_0),\\
+    A_t &= -i \int_0^t H_s \,ds.
+\end{align*}
+
+
+\begin{remark}
+    We can also introduce a ``differential notation'', for the differential equation \eqref{eq:eqdiff}, we may write:
+    $$
+    \left\{
+    \begin{array}{l}
+        dU_t = dA_t\, U_t\\ 
+        U_0 = I
+    \end{array}
+    \right.
+    $$
+    Meaning that when we integrate the first expression we get the original equation.
+\end{remark}
+
+\section{Existence and Uniqueness of Solution}
+
+In Theorem \ref{teo: sol_eq_diff} we showed that a solution to the differential equation 
+\begin{equation} \label{eq: eqdiff_simile}
+    V_t = I + \int_0^t  V_s\,dA_s.
+\end{equation}
+is
+\begin{align*}
+    V_t = \prod_0^t e^{dA_s}.
+\end{align*}
+This equation is actually very similar to \eqref{eq:eqdiff}, and we can use the following lemma to relate the two equations.
+
+\begin{lemma} \label{lemma: eqstar}
+    Let $U \in \calpha[L(\mathbb{H}])$, then $U$ is a solution to \eqref{eq:eqdiff} if and only if $U^*$ is a solution to 
+    \begin{equation}
+        U^*_t = I + \int_0^t U^*_s \,dA_s^*.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Note that if $U$ is a solution to \eqref{eq:eqdiff} then
+    $$
+    U^*_t = I + \left(\int_0^t dA_s\,U_s\right)^*,
+    $$
+    but using Proposition \ref{prop: hasenso} it is easy to see that 
+    $$
+    \left(\int_0^t dA_s\,U_s\right)^* = \int_0^t U_s^*\,dA_s^*
+    $$
+    as wanted.
+\end{proof}
+
+Then, using this lemma and Theorem \ref{teo: sol_eq_diff}, a solution to Equation \eqref{eq:eqdiff} is
+$$
+U_t = \left(\prod_0^t e^{dA^*_s}\right)^*.
+$$
+
+The solution is actually also unique, in the sense that $U_t$ is the only $\mathcal{C}^\alpha$ function that satisfies Equation \eqref{eq:eqdiff}. To show this we will need the following:
+
+\begin{lemma} [Young-Gr\"onwall] \label{lemma:YG}
+
+Let $\alpha, \beta \in (0, 1]$, with $\alpha + \beta > 1$ and $\beta>\alpha$, consider the following functions:
+$$
+a \in C^{\alpha}([0,T]; \mathbb{R}^d), \quad
+%b &\in C^{\alpha}([0,T]; \mathbb{R}^{d \times k}), \\
+u \in C^{\alpha}([0,T]; \mathbb{R}^{d\times (k \times d)}), \quad
+y \in C^{\beta}([0,T]; \mathbb{R}^k).
+$$
+
+These functions satisfy the integral equation:
+\begin{equation}
+a_t = a_0 + \int_0^t ua \, dy, \quad \text{for every } t \in [0,T]. \label{eq: integral-equation}
+\end{equation}
+
+Then, there exists a constant $\co$ such that:
+\begin{equation*}
+\|a\|_{\beta} \leq \co   \ |a_0| . 
+\end{equation*}
+\end{lemma}
+
+The proof of the lemma will be in Appendix \ref{app: yg}. \\
+
+Note that, although the formulation of the lemma may seem different from the problem we are studying, it is not restrictive. It is in fact sufficient to write the equation in coordinates to get in the same setting. 
+
+As an example, let's see how to write Equation \eqref{eq:eqdiff} in that form. First, we shall rewrite it as
+$$
+U_t^{ij} = \delta^{ij} + \int_0^t \sum_{k = 1}^d dA_s^{ik} U_s^{kj},
+$$
+where $\delta^{ij}$ is the Kronecker delta, defined as follows:
+$$
+\delta^{ij} = 
+    \left\{
+    \begin{array}{l}
+        1 \quad \text{if } i = j\\ 
+        0 \quad \text{otherwise}
+    \end{array}
+    \right. .
+$$
+Then we can choose $\beta$ such that $1/2<\beta<\alpha$, and then define
+$$
+a \in C^{\beta}([0,T]; \mathbb{R}^{d^2}), \quad
+%b &\in C^{\alpha}([0,T]; \mathbb{R}^{d \times k}), \\
+u \in C^{\beta}([0,T]; \mathbb{R}^{d^2\times (d^2 \times d^2)}), \quad
+y \in C^{\alpha}([0,T]; \mathbb{R}^{d^2}),
+$$
+as
+\begin{align*}
+a^{i+(j-1)\cdot d} &= U^{ij},\\
+y^{i+(j-1)\cdot d} &= A^{ij},
+\end{align*}
+We set $u^{lmn} = 1$ if there exists $k \in \{1, \ldots, d\}$ such that
+$$
+l = k + (j-1)d, \quad m = i + (j-1)d, \quad n = i + (k-1)d,
+$$
+and $u^{lmn} = 0$ otherwise.
+Lastly, if we set $a_0^{i + (j-1)\cdot d} = \delta^{ij}$, our original equation will be equivalent to \eqref{eq: integral-equation} and we can apply the lemma.\\
+
+We can now prove:
+\begin{prop} \label{prop:unicity}
+Let $\alpha > 1/2$, and let $A \in \mathcal{C}^\alpha([0, T], L(\mathbb{H}))$. Suppose also that $U, V \in \mathcal{C}^\alpha([0, T], L(\mathbb{H}))$ are such that $U_0=V_0$ and for every $t\in[0,T]$
+$$
+    U_t = U_0 + \int_0^t  dA_s\, U_s, \quad V_t = V_0 + \int_0^t  V_s\,dA_s.
+$$
+Then, the solutions are unique, i.e., $U = V$.
+\end{prop}
+
+\begin{proof}
+    Let $P = U -V$, note that $P$ is $\alpha$-H\"older continuous and satisfies the equation 
+    $$
+    P_t = \int_0^t dA_s\, P_s.
+    $$
+    A simple application of Lemma \ref{lemma:YG} then leads to 
+    $$
+    \|P\|_\alpha \le \co  \ |P_0| = 0,
+    $$
+    but this means $P$ is identically zero and so $U = V$ as desired. 
+    
+\end{proof}
+
+\begin{remark} \label{rm:ext-unicity}
+    Note that with a very similar approach we could show uniqueness also for the equation
+    $$
+    U_t = U_0 + \int_0^t U_s\ dA_s
+    $$
+    and more generally for all equations of the form
+    $$
+    U_t = U_0 + \int_0^t f(dA_s, U_s),
+    $$
+    where $f(dA_s, U_s)$ is some linear combination of the entries of $dA_s$ and $U_s$; it is in fact sufficient to write the right $u$ to apply Lemma \ref{lemma:YG}.
+\end{remark}
+
+\section{Unitarity of the Solutions}
+
+Now that we have established existence and uniqueness for the solutions of Equation \eqref{eq:eqdiff}, we still have to ensure that the solutions are unitary, otherwise we won't have any physical interpretation for non-unit vectors of $\mathbb{H}$. 
+
+To do so we can ask that $A^* = -A$, this is motivated by the fact that to get the original Equation \eqref{eq:initial-value-problem} we need to set
+$$
+A_t = -i\int_0^t H_s \ ds,
+$$
+and since $H$ is Hermitian we get exactly $A_t^*=-A_t$ for every $t$.
+
+\begin{prop}
+    Let $A$ as in proposition \ref{prop:unicity} be such that $A^*_t = -A_t$ for every $t\in[0,T]$, and let $U$ be a solution to
+    $$
+    U_t = I + \int_0^t dA_s \ U_s,
+    $$
+    then $U_t$ is unitary for every $t\in[0,T]$.
+\end{prop}
+
+\begin{proof}
+    To show that $U_t$ is unitary, we will consider $U_t^*$. Note that, because of Lemma \ref{lemma: eqstar}, it satisfies the equation
+    $$
+    U_t^* = I + \int_0^t U_s^* \ dA_s^*,
+    $$
+    and since $A^*_t = -A_t$ we get
+    $$
+    U_t^* = I - \int_0^t U_s^* \ dA_s.
+    $$
+    Using now the integration by parts formula for the Young integral, shown in Theorem \ref{teo: intbypart}, we get
+    $$
+    U_tU^*_t = U_0U^*_0 + \int_0^t U_s \ dU^*_s + \int_0^t dU_s \ U^*_s,
+    $$
+    and using the transitivity of Young integral (Propositions \ref{prop: trans} and \ref{prop: trans1}):
+    \begin{align} \label{eq:eq-UU*}
+        \nonumber U_tU^*_t 
+        &= U_0U^*_0 - \int_0^t U_s U^*_s \ dA_s + \int_0^t dA_s \ U_s U^*_s \\
+        &= I + \int_0^t (dA_s \ U_s U^*_s - U_s U^*_s \ dA_s).
+    \end{align}
+    Where the last integral is, as in Remark \ref{rm:ext-unicity}, to be understood as a linear combination of the entries of $dA_s$ and $U_sU^*_s$. Because of Remark \ref{rm:ext-unicity}, we can apply Young-Gr\"onwall's lemma and obtain that Equation \eqref{eq:eq-UU*} has a unique solution.
+
+    Note that $U_tU_t^* = I$ for every $t$ is a solution to \eqref{eq:eq-UU*}, so $U_t$ is unitary for every $t\in[0,T]$.
+    
+\end{proof}
+
+\begin{remark}
+    If we write the equations in the differential form we can get the same result, integration by part yields
+    $$
+    d(U_tU_t^*) = U_t\ dU^*_t + dU_t \ U^*_t,
+    $$
+    and then formally substituting the equation for $dU^*$ and $dU$, which is equivant to using transitivity of Young integral, we get
+    $$
+    d(U_tU_t^*) = - (U_t U^*_t)\ dA_t + dA_t \ (U_t  U^*_t),
+    $$
+    this can be written in a nice way as
+    $$
+    d(U_tU_t^*) = [dA_t , (U_t  U^*_t)],
+    $$
+    meaning that the commutator must be formally carried out. The last expression is equivalent to equation \eqref{eq:eq-UU*}.
+\end{remark}

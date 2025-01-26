@@ -1,0 +1,192 @@
+\chapter{Notation and Useful Results} \label{app: notaz}
+
+\section{Discrete differential calculus}
+
+Given a metric space $(X, d)$ and a function $f : X \to \mathbb{R}^k$, we write $f(x) := f_x$ for $x \in X$ and define
+\[
+\delta f : X^2 \to \mathbb{R}^k, \quad \delta f_{xy} := f_y - f_x \quad \text{for } x, y \in X.
+\]
+Notice that discrete Leibniz rules hold in the following form. For functions $f, g : X \to \mathbb{R}$, let $(fg)_x := f_x g_x$, then for $x,y\in X$
+\[
+\delta(fg)_{xy} = (\delta f_{xy})g_y + f_x(\delta g_{xy})
+= f_x(\delta g_{xy}) + (\delta f_{xy})g_x + (\delta f_{xy})(\delta g_{xy}) 
+\]
+With a slight abuse of notation, when $X \subset \mathbb{R}^k$ and $f$ is the identity map, we write
+$\delta_{xy} = y - x$, hence $d(x, y) = |y - x| = |\delta_{xy}|$.
+
+\section{H\"older functions} \label{sec: normecalpha}
+
+For a metric space $(X, d)$ and a function $f : X \to \mathbb{R}^k$, we define
+\begin{equation*}
+    [f]_0 := \sup_{x \in X} |f_x|.
+\end{equation*}
+For a function $\omega : X^2 \to \mathbb{R}^k$ and $\alpha \geq 0$, we define
+\begin{equation*}
+    [\omega]_\alpha := \sup_{\substack{x, y \in X \\ x \neq y}} \frac{|\omega_{xy}|}{d(x, y)^\alpha} \in [0, +\infty].
+\end{equation*}
+We have the following properties:
+\begin{equation*} 
+    [\omega + \omega']_\alpha \leq [\omega]_\alpha + [\omega']_\alpha, \quad [f\omega]_\alpha \leq [f]_0 [\omega]_\alpha,
+\end{equation*}
+\begin{equation}\label{eq: Holddisug}
+    [\omega]_\alpha \leq [\omega]_\beta \, \text{diam}(X)^{\beta - \alpha} \quad \text{if } \alpha \leq \beta.
+\end{equation}
+Moreover, for any fixed $x \in X$, it holds that
+\begin{equation} \label{eq: Holdercrescono}
+    [f - f_x]_0 \leq [\delta f]_\alpha \, \text{diam}(X)^\alpha. 
+\end{equation}
+We say $f$ is $\alpha$-H\"older continuous if $[\delta f]_\alpha<+\infty$, moreover we say that $f \in C^\alpha(X; \mathbb{R}^k)$, if
+\begin{equation} \label{eq: holderdef}
+    \|f\|_\alpha := [f]_0 + [\delta f]_\alpha < \infty.
+\end{equation}
+
+It is possible to prove that this is indeed a norm on $C^\alpha(X,\R^k)$. Note that for $\alpha = 1$, this defines the space of bounded Lipschitz functions on $X$ with values in $\mathbb{R}^k$, rather than the usual space of continuously differentiable functions. When $k = 1$, we simply write $C^\alpha(X) $ instead of $ C^\alpha(X; \mathbb{R})$.
+
+\section{Hilbert Spaces}
+
+\begin{definition} A Hilbert space $\Hi$ is a complex vector space
+ with a (positive-definite) scalar product
+\begin{equation*}
+    \langle \cdot | \cdot \rangle : \Hi \times \Hi \rightarrow \mathbb{C}, \quad (\psi, \varphi) \mapsto \langle \psi | \varphi \rangle,
+\end{equation*}
+such that for all $\varphi, \psi, \varphi_1, \varphi_2 \in \Hi$ and $a, b \in \mathbb{C}$, the following hold:
+\begin{equation*}
+    \langle \psi | \varphi \rangle = \overline{\langle \varphi | \psi \rangle},
+\end{equation*}
+\begin{equation*}
+    \langle \psi | \psi \rangle \geq 0, 
+\end{equation*}
+\begin{equation*}
+    \langle \psi | \psi \rangle = 0 \iff \psi = 0, 
+\end{equation*}
+\begin{equation*}
+    \langle \psi | a\varphi_1 + b\varphi_2 \rangle = a\langle \psi | \varphi_1 \rangle + b\langle \psi | \varphi_2 \rangle. 
+\end{equation*}
+
+The scalar product induces a norm
+\begin{equation*}
+    \| \cdot \| : \Hi \rightarrow \mathbb{R}, \quad \psi \mapsto \sqrt{\langle \psi | \psi \rangle}, 
+\end{equation*}
+in which $\Hi$ is complete.
+
+\end{definition}
+
+\begin{remark}
+    Finite dimensional complex vector spaces, with a complex norm, which are the only cases relevant for us in this thesis, are always complete.
+\end{remark}
+
+With the help of the scalar product every vector $\psi\in\Hi$ defines a linear map:
+\begin{equation*}
+    \bra{\psi}:\Hi\to\C, \quad \varphi \mapsto \langle\psi|\varphi\rangle.
+\end{equation*}
+
+Conversely, one can show that every linear and continuous\footnote{Continuity needs to be mentioned separately only in the infinite-dimensional case. In finite dimensional spaces every linear map is necessarily continuous.} map from $\Hi$ to $\C$ can be expressed with a $\psi\in\Hi$ in the form $\bra{\psi}$. This means that there is a natural bijection between $\Hi$ and its dual space, $\Hi^*$. This identification\footnote{Identified with each other are the sets, but not the linear structures of the vector spaces, since the
+bijection $\Hi\ni\ket{\psi}\mapsto\bra{\psi}\in\Hi^*$ is anti-linear.} motivates the \textit{bra} and \textit{ket} notation, derived from the word \textit{bracket} and introduced by Dirac. \textit{Bra-vectors} are elements of $\Hi^*$ and are written as $\bra{\psi}$, while \textit{ket-vectors} are elements of $\Hi$ and are written as $\ket{\psi}$. The application of the bra $\bra{\varphi}$ on the ket $\ket{\psi}$ is the \textit{bracket} $\braket{\varphi|\psi}\in\C$.
+
+If we fix an orthonormal basis, or ONB, $\{e_j\}$ of $\Hi$, then for any $\psi\in\Hi$:
+$$
+\ket{\psi} = \sum_j\ket{e_j}\braket{e_j|\psi}.
+$$
+
+\section{Operators on Hilbert spaces}
+
+\begin{definition}
+    A linear map $A : \Hi \to \Hi$ is called an \textit{operator} on the Hilbert space $\Hi$. The set of all operators on $\Hi$ is denoted by $L(\Hi)$. 
+
+    The operator $A^* : \Hi \to \Hi$ that satisfies
+    \begin{equation*}
+        \langle A^* \psi | \varphi \rangle = \langle \psi | A \varphi \rangle \quad \forall \, |\psi\rangle, |\varphi\rangle \in \Hi,
+    \end{equation*}
+    is called the adjoint operator to $A$. If $A^* = A$, then $A$ is called \textit{self-adjoint}.
+\end{definition}
+
+In the finite dimensional case self-adjoint is the same as \textit{Hermitian}, to be precise, $A^*$ is actually a map $A^*:\Hi^*\to\Hi^*$, but as mentioned before we can identify $\Hi^*$ with $\Hi$.
+
+\begin{definition}
+    An operator $U$ on $\Hi$ is called \textit{unitary} if
+    $$
+    \braket{U\psi|U\varphi} = \braket{\psi|\varphi} \quad \forall \, |\psi\rangle, |\varphi\rangle \in \Hi,
+    $$
+    The set of all unitary operators on $\Hi$ is denoted by $\U(\Hi)$.
+\end{definition}
+
+Unitary operators does not change the norm, i.e. $\|U\psi\| = \|\psi\|$, and it is easy to show that they have their adjoint operator as their inverse.
+
+\begin{definition}
+    Let $A$ be an operator on a Hilbert space $\Hi$. A vector $|\psi\rangle \in \Hi \setminus \{0\}$ is called an eigenvector of $A$ with eigenvalue $\lambda \in \mathbb{C}$ if
+\begin{equation*}
+A|\psi\rangle = \lambda|\psi\rangle.
+\end{equation*}
+
+The eigenspace of $A$ for $\lambda$, denoted $\text{Eig}(A, \lambda)$, is the subspace spanned by all eigenvectors corresponding to $\lambda$. An eigenvalue $\lambda$ is non-degenerate if its eigenspace is one-dimensional, and degenerate otherwise. The spectrum of $A$, $\sigma(A)$, is the set of $\lambda \in \mathbb{C}$ for which $(A - \lambda I)^{-1}$ does not exist.
+
+\end{definition}
+
+Eigenvalues of an operator $A$ are part of its spectrum. In infinite-dimensional Hilbert spaces, the spectrum can include a so called continuous part, but in this thesis we focus only on finite-dimensional spaces, so we can identify the spectrum with the set of the eigenvalues.
+
+For self-adjoint operators, eigenvalues are real, and for unitary operators, they have absolute value 1.
+
+\begin{definition}
+    The \textit{commutator} of two operators $A$ and $B$ is defined as
+    $$[A,B]\coloneq AB-BA,$$
+    we say that $A$ and $B$ commute if their commutator vanishes, that is, if $[A,B] = 0$.
+\end{definition}
+
+\section{Tensor products  of Hilbert spaces} \label{sec: tensori}
+
+Here we give a more informal definition of the tensor product of two finitely dimensional Hilbert spaces, this is sufficient for our purposes.
+
+Let $\Hi^A$ and $\Hi^B$ be Hilbert spaces. Let $|\varphi\rangle \in \Hi^A$ and $|\psi\rangle \in \Hi^B$, we define the map
+\begin{equation*}
+|\varphi\rangle \otimes |\psi\rangle : \Hi^A \times \Hi^B \to \mathbb{C}, \quad (\xi, \eta) \mapsto \langle \xi | \varphi \rangle_{\Hi^A} \langle \eta | \psi \rangle_{\Hi^B}.
+\end{equation*}
+This map is anti-linear in $\xi$ and $\eta$ and continuous. We define the set of all such maps as
+\begin{equation*}
+\Hi^A \otimes \Hi^B := \{ \Psi : \Hi^A \times \Hi^B \to \mathbb{C} \, | \, \text{anti-linear and continuous} \}.
+\end{equation*}
+This forms a vector space over $\mathbb{C}$ thus, $|\varphi\rangle \otimes |\psi\rangle$ is a vector in the space of anti-linear and continuous maps $\Hi^A \otimes \Hi^B$ as defined. In order to simplify the notation we shall also write:
+\begin{equation*}
+    \ket{\varphi\otimes\psi} \coloneq \ket{\varphi}\otimes\ket{\psi}.
+\end{equation*}
+
+For vectors $\ket{\varphi_k\otimes\psi_k}\in \Hi^A\otimes\Hi^B$, with $k\in\{1,2\}$, we can define the scalar product as:
+\begin{equation} \label{eq: primadefprodscal}
+    \braket{\varphi_1\otimes\psi_1|\varphi_2\otimes\psi_2} \coloneq \braket{\varphi_1|\varphi_2}_{\Hi^A}\braket{\psi_1|\psi_2}_{\Hi^B},
+\end{equation}
+where in the following we shall often omit the subscripts when it is clear in which space the scalar product is to be calculated.
+
+Let $\{\ket{e_a}\}\subseteq\Hi^A$ and $\{\ket{f_b}\}\subseteq\Hi^B$ be two ONB of the two spaces, then the set $\{\ket{e_a\otimes f_b}\}\in\Hi^A\otimes\Hi^B$ is orthonormal, this is clear because of \eqref{eq: primadefprodscal}. Considering now an arbitrary vector $\Psi\in\Hi^A\otimes\Hi^B$, then for this anti linear map:
+\begin{align*}
+    \Psi(\xi, \eta) &= \Psi \left( \sum_a |e_a \rangle \langle e_a | \xi \rangle, \sum_b | f_b \rangle \langle f_b | \eta \rangle \right) \\
+&= \sum_{a,b} \Psi \left( |e_a \rangle, |f_b \rangle \right) \langle \xi | e_a \rangle \langle \eta | f_b \rangle \\
+&= \sum_{a,b} \Psi_{ab} \cdot \langle \xi | e_a \rangle \langle \eta | f_b \rangle \\
+&= \sum_{a,b} \Psi_{ab} \cdot (|e_a \rangle \otimes |f_b \rangle )(\xi, \eta)\\
+&= \sum_{a,b} \Psi_{ab} \cdot |e_a  \otimes f_b \rangle (\xi, \eta),
+\end{align*}
+where we defined $\Psi_{ab}\coloneq\Psi(\ket{e_a}, \ket{f_b})\in \C$.
+
+This proves that every vector $|\Psi \rangle \in \Hi^A \otimes \Hi^B$ can be written as a linear combination of the form
+\begin{equation*}
+|\Psi \rangle = \sum_{a,b} \Psi_{ab} |e_a \rangle \otimes |f_b \rangle.
+\end{equation*}
+
+We can the extend the definition of the scalar product in \eqref{eq: primadefprodscal} to every $\Psi, \Phi\in\Hi^A\otimes\Hi^B$ as:
+\begin{align} \label{eq: tensscal}
+    \braket{\Psi|\Phi} &= \sum_{a_1,b_1}\sum_{a_2,b_2}\overline{\Psi_{a_1b_1}}\Phi_{a_2b_2} \braket{e_{a_1}\otimes f_{b_1}|e_{a_2}\otimes f_{b_2}}\notag\\
+    &=\sum_{a,b} \overline{\Psi_{ab}}\Phi_{ab}.
+\end{align}
+One can show that \eqref{eq: tensscal} does not depend on the choice of the ONBs, and also that it is indeed a scalar product. Since $\Hi^A\otimes\Hi^B$ is finitely dimensional it is also complete, so it is an Hilbert space.
+
+\begin{definition}
+    The Hilbert space $\Hi^A\otimes\Hi^B$ with the scalar product \eqref{eq: tensscal} is called the \textit{tensor product} of $\Hi^A$ and $\Hi^B$.
+\end{definition}
+
+Also, we can easily construct an ONB for this space, using the following proposition:
+
+\begin{prop}
+    Let $\{|e_a \rangle\} \subseteq \Hi^A$ be an ONB in $\Hi^A$ and $\{|f_b \rangle\} \subseteq \Hi^B$ be an ONB in $\Hi^B$. The set $\{|e_a \rangle \otimes |f_b \rangle\} = \{|e_a \rangle \otimes |f_b \rangle\}$ forms an ONB in $\Hi^A \otimes \Hi^B$, and for finite-dimensional $\Hi^A$ and $\Hi^B$ one has
+    \begin{equation*}
+    \dim (\Hi^A \otimes \Hi^B) = \dim (\Hi^A) \dim (\Hi^B).
+    \end{equation*}
+\end{prop}
+

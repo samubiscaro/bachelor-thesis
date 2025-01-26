@@ -1,0 +1,659 @@
+\chapter{An Introduction to Quantum Computing}
+
+\epigraph{The universe, somewhere, is ordered, and this order eludes us. Elsewhere it is disordered, and this disorder fascinates us.}{Italo Calvino, \\ \textit{The Cosmicomics} }
+
+\textit{Quantum computing} studies how information can be stored and proces-sed using systems governed by quantum mechanical laws. Unlike classical computing, which relies on \textit{bits}, quantum computing uses \textit{qubits}, exploiting quantum phenomena such as \textit{superposition} and \textit{entanglement} to perform computations more efficiently for certain problems. This field has significant implications not only for computational speed and cryptography but also for our fundamental understanding of reality.
+
+Quantum computing is of particular interest in this work because it requires manipulating operators on Hilbert spaces, which are central objects in the mathematical formulation of quantum mechanics. In particular, our study of the multiplicative sewing lemma provides a framework to generalize the behavior of quantum operations governed by more irregular Hamiltonians.
+
+Throughout this chapter, we will follow the presentation of quantum computing from the book \emph{Mathematics of Quantum Computing} \cite{MatQuantComp}, which offers a rigorous mathematical foundation for the concepts discussed.
+
+\section{Basic Notions of Quantum Mechanics}
+
+\textit{Quantum mechanics} is a theory that predicts the statistical behavior of microscopic objects (such as electrons, protons, atoms) and often has implications for macroscopic phenomena. Measurements on these objects yield real-number outcomes, and repeated measurements on identically prepared systems reveal that the values are distributed around a \textit{mean}, following a relative \textit{frequency distribution}. The mathematical formulation of quantum mechanics will be presented through four \textit{foundational postulates}, and we will only focus on the so called \textit{``pure states''}. For the notation and mathematical objects used throughout this chapter, we refer the reader to Appendix \ref{app: notaz}.
+
+\begin{postulate} [Observable and Pure States]
+    An \textit{observable}, i.e., a physically measurable quantity of a quantum system, is represented by a self-adjoint operator on a Hilbert space $\mathbb{H}$. If the preparation of a statistical ensemble is such that, for any observable represented by its self-adjoint operator $A$, the mean value of the observable can be calculated using a vector $\lvert \psi \rangle \in \mathbb{H}$ satisfying $\|\psi\| = 1$ as:
+    \begin{equation} \label{eq: primpost}
+    \langle A \rangle_\psi \coloneq \langle \psi \lvert A \psi \rangle,
+    \end{equation}
+    then the preparation of the system is said to be described by a \textit{pure state}, represented by the vector $\lvert \psi \rangle \in \mathbb{H}$. This vector is called the \textit{state vector} or simply the \textit{state}, and $\langle A \rangle_\psi$ is referred to as the (quantum mechanical) \textit{expectation value} of the observable $A$ in the pure state $\lvert \psi \rangle$.
+\end{postulate}
+
+    The space $\mathbb{H}$ is known as the \textit{Hilbert space} of the quantum system, and often we will refer to a quantum system by its Hilbert space, for example, if a system $S$ is described by $\mathbb{H}^S$, we will simply say ``the system $\mathbb{H}^S$''.
+    
+    We will also require that
+    $$
+    \langle \mathbf{1} \rangle_\psi = \|\psi\|^2 = 1,
+    $$
+    for any state vector $|\psi\rangle$, because the operator $\mathbf{1}$ can be interpreted as the observable \textit{``is there anything present?''}.
+
+    Using the diagonal representation of a self-adjoint operator \( A \) in terms of its eigenbasis, the expectation value of the observable \( A \) in a state \( \psi \) is given by
+    \[
+    \langle A \rangle_\psi = \langle \psi | A | \psi \rangle = \sum_j \lambda_j |\langle e_j | \psi \rangle|^2,
+    \]
+    where \( \{ \lambda_j \} \) are the eigenvalues of \( A \) and \( \{ e_j \} \) are its corresponding eigenvectors. The quantities \( |\langle e_j | \psi \rangle|^2 \) represent the probabilities of measuring the eigenvalue \( \lambda_j \).
+    
+    In finite-dimensional systems, the eigenvalues \( \{ \lambda_j \} \) of the self-adjoint operator \( A \) correspond to the possible measurement outcomes for the observable. If the spectrum is non-degenerate, the probabilities of obtaining each \( \lambda_j \) are precisely \( |\langle e_j | \psi \rangle|^2 \). This idea can be extended to infinite-dimensional systems, where the spectrum may include continuous parts, but in this context, we focus only on finite-dimensional systems. This concept is formalized in the following postulate.
+    
+\begin{postulate} \label{pos: 2}
+    In a quantum system with Hilbert space $\mathbb{H}$, the possible measurement values of an observable are given by the spectrum $\sigma(A)$ of the operator $A \in B_{\text{sa}}(\mathbb{H})$ associated with the observable. The probability $P_\psi(\lambda)$ that a measurement of the observable yields the eigenvalue $\lambda$ of $A$ for a quantum system in the pure state $\lvert \psi \rangle \in \mathbb{H}$ is given by:
+    \begin{equation} \label{eq: secpost}
+    P_\psi(\lambda) = \|P_\lambda \lvert \psi \rangle\|^2,
+    \end{equation}   
+    where $P_\lambda$ is the projection onto the eigenspace $\text{Eig}(A, \lambda)$ of $\lambda$.
+\end{postulate}
+
+That \eqref{eq: secpost} indeed defines a probability measure on the spectrum of \( A \) requires, in the general case, a technically demanding proof, so we will not show this. 
+
+As a consequence of \eqref{eq: primpost}, for any observable \( A \) and any complex number of the form \( e^{i\alpha} \in \mathbb{C} \) with \( \alpha \in \mathbb{R} \), we have
+\[
+\langle A \rangle_{e^{i\alpha} \psi} = \langle e^{i\alpha} \psi | A | e^{i\alpha} \psi \rangle = \langle \psi | A | \psi \rangle = \langle A \rangle_\psi,
+\]
+which means that the expectation values of the observable \( A \) are the same in the state \( e^{i\alpha} |\psi\rangle \) as in the state \( |\psi\rangle \).
+
+Furthermore, since
+\[
+|\langle e^{i\alpha} \psi | e_j \rangle|^2 = |\langle \psi | e_j \rangle|^2,
+\]
+the measurement probabilities in the two states are also identical. This shows that the states \( e^{i\alpha} |\psi\rangle \) and \( |\psi\rangle \) are \textit{physically indistinguishable}, meaning they represent the same quantum state. This leads us to the following definition
+
+\begin{definition}
+    For every \( |\psi\rangle \in \mathbb{H} \) with \( \|\psi\| = 1 \), the set
+    \[
+    S_\psi := \{ e^{i\alpha} |\psi\rangle \mid \alpha \in \mathbb{R} \}
+    \]
+    is called a \textit{ray} in \( \mathbb{H} \) with \( |\psi\rangle \) as a representative.
+\end{definition}
+
+Every element of a ray \( S_\psi\) describes the same physical state, and the phase \( \alpha \in \mathbb{R} \) can be chosen arbitrarily. More precisely, pure quantum states are described by a representative \( |\psi\rangle \) of a ray \( S_\psi \) in the Hilbert space \( \mathbb{H} \). In practice, only the symbol \( |\psi\rangle \) of a representative of the ray is used, with the understanding that \( |\psi\rangle \) and \( e^{i\alpha} |\psi\rangle \) represent the same physical state.
+
+Conversely, every unit vector in a Hilbert space \( \mathbb{H} \) corresponds to a physical state, meaning that it captures the statistical properties of a quantum system. If \( |\phi\rangle, |\psi\rangle \in \mathbb{H} \) are quantum states, then any linear combination \( a|\phi\rangle + b|\psi\rangle \) with \( a, b \in \mathbb{C} \) and \( \|a|\phi\rangle + b|\psi\rangle\| = 1 \) is also a valid quantum state. This is known as the quantum \textit{superposition principle}: any normalized linear combination of quantum states is itself a state and is, in principle, physically realizable.
+
+However, it is important to note that while the \textit{global phase} of a state is physically irrelevant, the \textit{relative phases} between terms in a linear combination are not. This will be made more clear by the following example.
+
+\begin{ex}
+    Let \( |\phi\rangle \) and \( |\psi\rangle \in \mathbb{H} \) be two \textit{orthogonal states}, meaning \( \langle \phi | \psi \rangle = 0 \). Then the states \( \frac{1}{\sqrt{2}} (|\phi\rangle + |\psi\rangle) \) and \( \frac{1}{\sqrt{2}} (|\phi\rangle + e^{i\alpha} |\psi\rangle) \) are both normalized state vectors, but they correspond to different physical situations. In fact, for any observable $A$ we have:
+    \begin{align*}
+        \langle A \rangle _{\frac{|\phi\rangle + |\psi\rangle}{\sqrt{2}}} & = \frac{1}{2} \left\langle \phi + \psi \middle| A \left( |\phi\rangle + |\psi\rangle \right) \right\rangle \\
+        & = \frac{1}{2} \left( \langle \phi | A \phi\rangle + \langle \psi | A \psi\rangle + \langle \phi | A \psi\rangle + \langle \psi | A \phi\rangle \right) \\
+        & = \frac{1}{2} \left( \langle \phi | A \phi\rangle + \langle \psi | A \psi\rangle + \langle \phi | A \psi\rangle + \langle A \psi | \phi\rangle \right) \\
+        & = \frac{1}{2} \left( \langle A \rangle _\phi + \langle A \rangle_ \psi \right)+ \text{Re}(\langle \phi | A \psi\rangle) .
+    \end{align*}
+    Where the term $\text{Re}(\langle \phi | A \psi\rangle)$ is often called the \textit{interference term}, and this will be the term that is different in the case of  \( \frac{1}{\sqrt{2}} (|\phi\rangle + e^{i\alpha} |\psi\rangle) \). In fact, doing the same calcultaions, one gets
+    $$
+        \langle A \rangle _{\frac{|\phi\rangle + e^{i\alpha}|\psi\rangle}{\sqrt{2}}} = \frac{1}{2} \left( \langle A \rangle _\phi + \langle A \rangle_ \psi \right)+ \text{Re}(e^{i\alpha}\langle \phi | A \psi\rangle).
+    $$
+\end{ex}
+
+If a quantum system is prepared in the state \( |\psi\rangle \), we can determine the likelihood of measuring it in the state \( |\phi\rangle \) using the following proposition.
+
+\begin{prop}
+    Let the states of a quantum system be represented by rays in a Hilbert space \( \mathbb{H} \). If the system is prepared in the state \( |\psi\rangle \in \mathbb{H} \), the probability of observing it in the state \( |\phi\rangle \in \mathbb{H} \) is given by
+    \[
+    P\left(
+    \begin{matrix}
+        \text{System prepared in state } |\psi\rangle \\
+        \text{ is observed in state } |\phi\rangle 
+    \end{matrix}   
+    \right) = |\langle \phi | \psi \rangle|^2.
+    \]
+\end{prop}
+
+\begin{proof}
+    Let \( |\psi\rangle, |\phi\rangle \in \mathbb{H} \) with \( \| \psi \| = \| \phi \| = 1  \). The observable measured when determining if the system is in the state \( |\phi\rangle \) is the orthogonal projection \( P_\phi = |\phi\rangle\langle \phi| \) onto that state. This observable has eigenvalues 0 and 1. The eigenvalue \( \lambda = 1 \) is non-degenerate, and its eigenspace is spanned by \( |\phi\rangle \). Therefore, the projection onto the eigenspace for eigenvalue \( \lambda = 1 \) is also given by \( P_\phi \). Thus, equation \eqref{eq: secpost} from Postulate \ref{pos: 2} becomes:
+    \begin{align*}
+        P_\psi(\lambda = 1) &= \| P_1 |\psi\rangle \|^2 = \| P_\phi |\psi\rangle \|^2 = \| |\phi\rangle\langle \phi|\psi\rangle \|^2 = \\
+        &=\langle \phi | \psi \rangle^2 \| \phi \|^2 = 1 = |\langle \phi | \psi \rangle|^2.
+    \end{align*}
+\end{proof}
+
+How widely are the measurement results distributed around their expectation value? This question is addressed by the concept of \textit{uncertainty} or \textit{standard deviation}, defined similarly to the corresponding notions in standard probability theory.
+
+\begin{definition}
+    The \textit{uncertainty} of an observable \( A \) in the state \( |\psi\rangle \) is defined as 
+    \[
+    \Delta_\psi(A) \coloneq \sqrt{\langle \psi | (A - \langle A \rangle_\psi \mathbf{1})^2  \psi \rangle} = \sqrt{\langle (A - \langle A \rangle_\psi)^2 \rangle_\psi}.
+    \]
+\end{definition}
+
+If the uncertainty vanishes, i.e., \( \Delta_\psi(A) = 0 \), we say that the value of the observable \( A \) in the state \( |\psi\rangle \) is \textit{sharp}. A sharp value of an observable \( A \) in a state \( |\psi\rangle \) means that all measurements of \( A \) on systems in the state \( |\psi\rangle \) will always yield the same result. This occurs if and only if \( |\psi\rangle \) is an eigenvector of \( A \), as stated in the following proposition.
+
+\begin{prop}
+    For any observable \( A \) and state \( |\psi\rangle \), the following equivalence holds:
+    \[
+    \Delta_\psi(A) = 0 \iff A|\psi\rangle = \langle A \rangle_\psi |\psi\rangle.
+    \]    
+\end{prop}
+
+\begin{proof}
+    Since the observable \( A \) is self-adjoint it follows that \( \langle A \rangle_\psi \in \mathbb{R} \). Consequently, we have: 
+    \[
+    (A - \langle A \rangle_\psi \mathbf{1})^* = A - \langle A \rangle_\psi \mathbf{1}. 
+    \]
+    
+    From this, we can derive:
+    \begin{align*}
+        (\Delta_\psi(A))^2 &= \langle \psi | (A - \langle A \rangle_\psi \mathbf{1})^2 \psi\rangle \\ 
+        &=\langle (A - \langle A \rangle_\psi \mathbf{1})\psi | (A - \langle A \rangle_\psi \mathbf{1})\psi \rangle.
+    \end{align*}
+
+    
+    This leads to the expression: 
+    \[
+    \Delta_\psi(A) = 0 \iff A|\psi\rangle = \langle A \rangle_\psi |\psi\rangle.
+    \]
+    
+    In conclusion, the value of the observable \( A \) is sharp if and only if \( |\psi\rangle \) is an eigenvector of \( A \) with eigenvalue \( \langle A \rangle_\psi \).
+    
+\end{proof}
+
+A state that is an \textit{eigenvector} of an operator associated with an observable is referred to as an \textit{eigenstate} of that operator or observable.
+
+A preparation in an eigenstate of \( A \) guarantees that all measurements of \( A \) conducted in that state will consistently yield the corresponding eigenvalue. Conversely, if the uncertainty of \( A \) vanishes for a given preparation, this indicates that the preparation is described by an eigenstate of \( A \).
+
+\begin{definition}
+    Two observables \( A \) and \( B \) are said to be \textit{compatible} if the associated operators commute, i.e., if \([A, B] = 0\). Conversely, if \([A, B] \neq 0\), they are referred to as \textit{incompatible}.
+\end{definition}
+
+A result from linear algebra indicates that if \( A \) and \( B \) are self-adjoint and commute, \([A, B] = 0\), then there exists an orthonormal basis \(\{|e_j\rangle\}\) in which both \( A \) and \( B \) are diagonal. Specifically, we can express the operators as:
+    
+    \[
+    A = \sum_j a_j |e_j\rangle \langle e_j| \quad \text{and} \quad B = \sum_j b_j |e_j\rangle \langle e_j|.
+    \]
+    
+    In a state \(|e_k\rangle\), the system is then in an eigenstate of both \( A \) and \( B \). Consequently, measurements of the compatible observables \( A \) and \( B \) in this state yield sharp results (the values \( a_k \) and \( b_k \)) for both observables, exhibiting no uncertainty.
+    
+    On the other hand, the uncertainties of incompatible observables are subject to a lower bound, as demonstrated by the following proposition.
+
+\begin{prop}
+    For any observables \( A, B \in \mathcal{B}_{sa}(\mathbb{H}) \) and state \( |\psi\rangle \in \mathbb{H} \), the following uncertainty relation holds:
+    \begin{equation} \label{eq: uncert}
+     \Delta_\psi(A) \Delta_\psi(B) \geq \left| \left\langle  \frac{1}{2i} [A, B] \right\rangle_ \psi  \right|,
+    \end{equation}
+\end{prop}
+
+\begin{proof}
+    The relation is a consequence of the following estimates:
+    \begin{align*}
+    \Delta_\psi(A)^2 \Delta_\psi(B)^2 &= \left\|\langle A - \langle A \rangle_\psi \mathbf{1}\rangle_ \psi \right\|^2\left\|\langle B - \langle B \rangle_\psi \mathbf{1}\rangle_ \psi \right\|^2 \\
+    &\geq \left| \langle (A - \langle A \rangle_\psi \mathbf{1}) \psi | (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle \right|^2 \\
+    &\geq \left(\text{Im} \left(\langle (A - \langle A \rangle_\psi \mathbf{1}) \psi | (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle\right) \right)^2 \\
+    &= \left( \frac{1}{2i}\langle (A - \langle A \rangle_\psi \mathbf{1}) \psi | (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle \right.\\ 
+    &\left.\quad-\frac{1}{2i}\overline{\langle (A - \langle A \rangle_\psi \mathbf{1}) \psi | (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle} \right)^2 \\
+    &=  \left( \frac{1}{2i}\langle (A - \langle A \rangle_\psi \mathbf{1}) \psi | (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle \right.\\
+    &\left.\quad- \frac{1}{2i}\langle (B - \langle B \rangle_\psi \mathbf{1}) \psi | (A - \langle A \rangle_\psi \mathbf{1}) \psi \rangle \right)^2 \\
+    &= \left( \frac{1}{2i}\langle \psi | (A - \langle A \rangle_\psi \mathbf{1}) (B - \langle B \rangle_\psi \mathbf{1}) \psi \rangle \right.\\
+    &\left.\quad- \frac{1}{2i}\langle \psi | (B - \langle B \rangle_\psi \mathbf{1}) (A - \langle A \rangle_\psi \mathbf{1}) \psi \rangle \right)^2 \\
+    &= \left( \left\langle \frac{1}{2i}[A - \langle A \rangle_\psi \mathbf{1}, B - \langle B \rangle_\psi \mathbf{1}]  \right\rangle_\psi\right)^2 \\
+    &= \left( \left\langle  \frac{1}{2i} [A, B] \right\rangle_ \psi  \right)^2.
+    \end{align*}
+
+\end{proof}
+
+\begin{ex}
+    The \textit{Heisemberg uncertainty relation} can be viewed as a specific instance of equation \eqref{eq: uncert}. In this context, we consider \( \mathbb{H} = L^2(\mathbb{R}^3) \), where \( A \) represents one of the position operators \( Q_j \) and \( B \) corresponds to one of the momentum operators \( P_j \) across the three spatial dimensions \( j \in \{1, 2, 3\} \).
+
+    For these operators, their actions on states \( |\psi\rangle \) in the Hilbert space \( H = L^2(\mathbb{R}^3) \) are defined as follows\footnote{As always in this thesis, here the system of units with $\hbar = 1$ is used, since otherwise one would have for the momentum operators $P_j  = -i \frac{\partial}{\partial x_j}$}:
+    \begin{align*}
+    Q_j |\psi\rangle(x) &= x_j \psi(x), \\
+    P_j |\psi\rangle(x) &= -i \frac{\partial}{\partial x_j} \psi(x).
+    \end{align*}
+    
+    From these definitions, we can derive the commutation relation:
+    \begin{align*}
+    [Q_j, P_k] |\psi\rangle(x) &= -ix_j \frac{\partial}{\partial x_k} \psi(x) - \left( -i \frac{\partial}{\partial x_k} (x_j \psi(x)) \right) \\
+    &= i\delta_{jk} |\psi\rangle(x).
+    \end{align*}
+    
+    Thus, we have \( [Q_j, P_k] = i\delta_{jk} \). As a result, the uncertainty relation in this scenario is expressed as:
+    
+    \[
+    \Delta_\psi(Q_j) \Delta_\psi(P_k) \geq \frac{1}{2} \delta_{jk}.
+    \]
+    
+\end{ex}
+
+A measurement of an observable \( A = \sum_j \lambda_j |e_j\rangle \langle e_j| \) on an object in the state 
+\( |\psi\rangle = \sum_j |e_j\rangle \langle e_j|\psi\rangle \) yields an eigenvalue \( \lambda_k \in \sigma(A) \). After this measurement, if no external interaction occurs, any subsequent measurement of \( A \) will always yield \( \lambda_k \). 
+
+The object is now in a state where \( A \) has the sharp value \( \lambda_k \), described by the eigenvector \( |e_k\rangle \). Thus, the measurement \textit{``projects''} the object from \( |\psi\rangle \) into the eigenstate \( |e_k\rangle \) with probability \( |\langle e_k|\psi\rangle|^2 \). This is known as the \textit{Projection Postulate}.
+
+    
+\begin{postulate} \label{pos: tre}
+    If a measurement of the observable $A$ on a quantum mechanical system in the pure state $\lvert \psi \rangle \in \mathbb{H}$ yields the eigenvalue $\lambda$, then the measurement causes a \textit{state transition}. Specifically, the state $\lvert \psi \rangle$ before the measurement transitions to the new state 
+    \[
+    \frac{P_\lambda \lvert \psi \rangle}{\|P_\lambda \lvert \psi \rangle\|},
+    \]
+    where $P_\lambda$ is the projection onto the eigenspace corresponding to $\lambda$. This new state represents the system immediately after the measurement.
+\end{postulate}
+
+Historically, the state \( |\psi\rangle \) of a quantum mechanical system has been referred to as the \textit{wave function}. For this reason, the Projection Postulate is also known as the \textit{collapse of the wave function}.\\
+
+A state can also evolve without measurement. The time evolution of a state, when no measurement is performed, is governed by a unitary operator, which is the solution to an operator initial value problem, as stated in the next postulete.
+
+
+\begin{postulate} \label{pos: quattro}
+    In a quantum system with Hilbert space $\mathbb{H}$, every change of a pure state over time that is not caused by a measurement is described by the \textit{time evolution operator} $U(t, t_0) \in \mathcal{U}(\mathbb{H})$.
+
+    Let $\lvert \psi(t_0) \rangle$ be the state at time $t_0$ and $\lvert \psi(t) \rangle$ be the state at time $t$. The time-evolved state $\lvert \psi(t) \rangle$ originating from the initial state $\lvert \psi(t_0) \rangle$ is given by:
+    \begin{equation*}
+    \lvert \psi(t) \rangle = U(t, t_0) \lvert \psi(t_0) \rangle. 
+    \end{equation*}
+    
+    The time evolution operator $U(t, t_0)$ is the solution of the initial value problem\footnote{We remind the reader here once more that in this thesis we use natural physical units, such that
+$\hbar = 1$, which is why this constant does not appear as a factor on the left side of the equation.}:    
+    \begin{align}
+    i \frac{d}{dt} U(t, t_0) &= H(t) U(t, t_0), \nonumber \\
+    U(t_0, t_0) &= I, \label{eq:initial-value-problem_mq}
+    \end{align}  
+    where $H(t)$ is the self-adjoint \textit{Hamiltonian operator}, which generates the time evolution of the quantum system.
+\end{postulate}
+
+\begin{prop}
+    The operator $U(t, t_0)$ satisfying equation \eqref{eq:initial-value-problem_mq}, with $H(t) \in \text{B}_\text{sa}(\mathbb H)$ is unitary and unique.
+\end{prop}
+
+\begin{proof}
+    To show the unitarity of $U(t,t_0)$ we can consider, given $|\psi\rangle \in \mathbb H$:
+    \begin{align*}
+        \frac{d}{dt} ||U(t,t_0)\psi||^2 &= \frac{d}{dt} \langle U(t,t_0)\psi | U(t,t_0)\psi \rangle \\
+        &= \left\langle \frac{d}{dt}U(t,t_0)\psi | U(t,t_0)\psi \right\rangle \\
+        &\quad + \left\langle U(t,t_0)\psi | \frac{d}{dt}U(t,t_0)\psi \right\rangle  \\
+        &=\langle -iH(t)U(t,t_0)\psi | U(t,t_0)\psi \rangle \\
+        &\quad+ \langle U(t,t_0)\psi | -iH(t)U(t,t_0)\psi \rangle \\
+        &= i \left( \langle H(t)U(t,t_0)\psi | U(t,t_0)\psi \rangle \right.\\
+        &\left.\quad- \langle U(t,t_0)\psi | H(t)U(t,t_0)\psi \rangle \right) \\
+        &= i \left( \langle H(t)^* U(t,t_0)\psi | U(t,t_0)\psi \rangle \right.\\
+        &\left.\quad- \langle U(t,t_0)\psi | H(t)U(t,t_0)\psi \rangle \right) \\
+        &= 0.
+    \end{align*}
+    Then $||U(t,t_0)\psi||^2$ is costant, but also $||U(t_0,t_0)\psi||^2 = \|\psi\|^2$.
+
+    To show the uniqueness of the solution, we can suppose that $V(t, t_0)$ is another solution, then the same calculations with ${U(t,t_0) - V(t,t_0)}$ instead of $U(t, t_0)$ yields that $||(U(t,t_0)-V(t,t_0))\psi||^2$ is constant, but this time $||(U(t_0,t_0)-V(t_0,t_0))\psi||^2 = 0$, so that $U = V$.
+    
+\end{proof}
+
+In the Chaper \ref{ch: eqdiff}, we will address the technical details regarding the existence of solutions $t \mapsto U(t,t_0)$. For the time being, we assume that the Hamiltonian $H(t)$ is such that a unique solution always exists.
+
+The operator version of time evolution, as described in Postulate \ref{pos: quattro}, is equivalent to the \textit{Schrödinger equation}:
+\[
+i \frac{d}{dt} |\psi(t)\rangle = H(t) |\psi(t)\rangle,
+\]
+which governs the time evolution of pure states through its action on state vectors. Applying the operator form to the state leads to the Schrödinger equation, and conversely, any solution of the Schrödinger equation for an initial state $|\psi(t_0)\rangle$ provides a solution for $U(t,t_0)$.
+
+The operator $H(t)$ corresponds to the \textit{energy} observable of the system, meaning that the expectation value $\langle H(t) \rangle_\psi$ gives the \textit{expected energy} in state $|\psi\rangle$. When $H(t)$ is time-independent, the system's energy remains constant and is determined by the eigenvalues $\{E_j \,|\, j \in I\}$ of $H$.
+
+The discreteness of energy levels for certain Hamiltonians is central to the notion of \textit{``quantum''}, a concept introduced by Planck in his study of \textit{black body radiation}. The Hamiltonian $H(t)$ not only represents the system's energy but also dictates its time evolution. 
+
+In quantum computing, gates are implemented as unitary operators $V$, which correspond to specific time evolutions $U(t,t_0)$ generated by a carefully chosen $H(t)$.
+
+\section{The Pauli Matrices} \label{sec: Pauli-matrix}
+
+An important example of observables in quantum computing is the \textit{spin} of an electron, which represents its \textit{intrinsic angular momentum}. This spin is described by three observables $S_x, S_y, S_z$, collectively denoted as the \textit{spin vector} $\mathbf{S} = (S_x, S_y, S_z)$. Since we are focusing on the spin only, the relevant Hilbert space is two-dimensional, $\mathbb H \cong \mathbb{C}^2$. The operators corresponding to the spin components $S_j$ in this space are\footnote{In non-natural units $\hbar$ would appear as a factor on the right side.}:
+\[
+S_j = \frac{1}{2} \sigma_j \quad \text{for } j \in \{x, y, z\},
+\]
+where the $\sigma_j$ are the \textit{Pauli matrices}, defined as follows:
+
+\begin{definition}
+    The Pauli matrices $\sigma_j \in \text{Mat}(2 \times 2, \mathbb{C})$, indexed by $j \in \{1, 2, 3\}$ or equivalently by $j \in \{x, y, z\}$, are defined as:
+    \[
+    \sigma_x := \sigma_1 := \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
+    \sigma_y := \sigma_2 := \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad
+    \sigma_z := \sigma_3 := \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.
+    \]
+    With $\sigma_0 := \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ denoting the $2 \times 2$ identity matrix, we extend the set to
+    \[
+    \{\sigma_\alpha\}_{\alpha \in \{0, \dots, 3\}} = \{\sigma_0, \sigma_1, \sigma_2, \sigma_3\}.
+    \]
+    
+    In the context of a two-dimensional Hilbert space $\mathbb H$ with a chosen orthonormal basis (ONB), we use the notation
+    \[
+    \sigma_0 = 1, \quad X = \sigma_1 = \sigma_x, \quad Y = \sigma_2 = \sigma_y, \quad Z = \sigma_3 = \sigma_z,
+    \]
+    to refer to the corresponding operators in $L(\mathbb H)$ with these matrix representations.
+
+\end{definition}
+
+For the spin states defined as
+\[
+| \uparrow _{\hat{z}} \rangle \coloneq | 0 \rangle \coloneq \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad 
+| \downarrow _{\hat{z}} \rangle \coloneq| 1 \rangle \coloneq \begin{pmatrix} 0 \\ 1 \end{pmatrix},
+\]
+the operator \( S_z \) has the following effects:
+\[
+S_z | \uparrow _{\hat{z}} \rangle = \frac{1}{2} | \uparrow _{\hat{z}} \rangle, \quad 
+S_z | \downarrow _{\hat{z}} \rangle = -\frac{1}{2} | \downarrow_ {\hat{z}} \rangle.
+\]
+Thus, \( S_z \) possesses eigenvalues \( \left\{ \pm \frac{1}{2} \right\} \) with eigenvectors \( \{ | \uparrow _{\hat{z}} \rangle, | \downarrow _{\hat{z}} \rangle \} \), which correspond to the \textit{up} and \textit{down} spin states in the $\hat{z}$ direction. For convenience, we will use \( \sigma_j = 2S_j \) as the observables, avoiding the factor of \( \frac{1}{2} \).
+
+The notation \( |0\rangle \) and \( |1\rangle \) for these eigenvectors reflects their association with classical bit values 0 and 1, a standard practice in quantum computing. A general state can be expressed as \( a|0\rangle + b|1\rangle \) with \( |a|^2 + |b|^2 = 1 \). It's important to note that \( |0\rangle \) is distinct from the null vector in Hilbert space.
+
+The observable \( \sigma_z \) thus has eigenvalues \( \pm 1 \) with eigenvectors \( |0\rangle \) and \( |1\rangle \), leading to expectation values:
+\[
+\langle \sigma_z \rangle |0\rangle = \langle 0 | \sigma_z | 0 \rangle = +1, \quad 
+\langle \sigma_z \rangle |1\rangle = \langle 1 | \sigma_z | 1 \rangle = -1.
+\]
+
+In the state \( |0\rangle \), the uncertainty in \( \sigma_z \) is calculated as follows:
+\[
+\sigma_z - \langle \sigma_z \rangle \mathbf{1} = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} - \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & -2 \end{pmatrix},
+\]
+yielding
+\[
+\langle 0 | (\sigma_z - \langle \sigma_z \rangle |0\rangle) |0\rangle = \begin{pmatrix} 1 & 0 \end{pmatrix} \begin{pmatrix} 0 & 0 \\ 0 & -2 \end{pmatrix} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = 0.
+\]
+Thus, we find that \( \Delta_{|0\rangle}(\sigma_z) = 0 \).
+
+Similarly, for the state \( |1\rangle \), \( \Delta_{|1\rangle}(\sigma_z) = 0 \) holds true as these states are eigenstates of \( \sigma_z \), leading to no measurement uncertainty.\\
+
+In contrast, \( \sigma_x \) and \( \sigma_z \) are incompatible operators since 
+\[ 
+    [\sigma_x, \sigma_z] = -2i\sigma_y .
+\] For \( |0\rangle \):
+\[
+\langle \sigma_x \rangle |0\rangle = 0 \quad \text{and} \quad \sigma_x - \langle \sigma_x \rangle \mathbf 1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} - 0 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix},
+\]
+leading to 
+\[
+\Delta_{|0\rangle}(\sigma_x) = 1,
+\]
+indicating that a measurement of \( \sigma_x \) in the state \( |0\rangle \) has non-zero uncertainty. The same conclusion holds for \( |1\rangle \) and measurements of \( \sigma_x \). Consequently, \( \sigma_z \) and \( \sigma_x \) cannot be simultaneously measured with zero uncertainty, a fact that similarly applies to the pairs \( \sigma_z, \sigma_y \) and \( \sigma_x, \sigma_y \).
+
+\section{Storing Information with Quantum Computers}
+
+A \textit{classical bit} represents the smallest unit of information, corresponding to a choice between binary alternatives typically denoted as 0 and 1 (or Yes and No, True and False). Physically, a classical bit can be realized by assigning these alternatives to two distinct states of a physical system, such as \textit{opposite magnetization} on a \textit{hard disk}.
+
+In \textit{quantum computing}, these binary alternatives can be represented by two basis vectors in a quantum state space, which is often an infinite-dimensional Hilbert space. For practical purposes, we can restrict our attention to two-dimensional eigenspaces of appropriately chosen observables. We will now give examples of some quantum systems with two-dimensional Hilbert spaces.
+
+\subsection{Electrons and their Spin}
+
+  We can ignore the electron's position and momentum, focusing solely on its spin state. As seen before, the binary alternatives can be mapped to the eigenstates of \( \sigma_z \):
+    \[
+    |0\rangle = |\uparrow _{\hat{z}}\rangle, \quad |1\rangle = |\downarrow_{ \hat{z}}\rangle.
+    \]
+  This is not the only option, we could have equivalently choose the eigenstates of \( \sigma_x \):
+    \[
+    |+\rangle = |\uparrow _{\hat{x}}\rangle = \frac{1}{\sqrt{2}}(|\uparrow_{ \hat{z}}\rangle + |\downarrow_{ \hat{z}}\rangle), \quad |-\rangle = |\downarrow_{ \hat{x}}\rangle = \frac{1}{\sqrt{2}}(|\uparrow_{ \hat{z}}\rangle - |\downarrow _{\hat{z}}\rangle),
+    \]
+o the eigenstates of \( \sigma_y \):
+    \[
+    |\uparrow _{\hat{y}}\rangle = \frac{1}{\sqrt{2}}(|\uparrow _{\hat{z}}\rangle + i|\downarrow_{ \hat{z}}\rangle), \quad |\downarrow _{\hat{y}}\rangle = \frac{1}{\sqrt{2}}(i|\uparrow_{ \hat{z}}\rangle + |\downarrow_{ \hat{z}}\rangle).
+    \]
+
+\subsection{Photons and Their Polarization} 
+
+For photons propagating in a specific direction, the \textit{polarization} is described by a two-dimensional complex vector known as the \textit{polarization vector}. We can map the binary alternatives to the vectors:
+    \[
+    |0\rangle = |H\rangle = \begin{pmatrix} 1 \\ 0 \end{pmatrix} \quad (\text{horizontal polarization}), 
+    \]
+    \[
+    \quad |1\rangle = |V\rangle = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \quad (\text{vertical polarization})
+    \]
+This vectors form an orthonormal basis and are the eigenvectors of the operator $\sigma_z = |H\rangle\langle H|- |V\rangle\langle V|$; the orthogonal projectors $|H\rangle\langle H|$ and $|V\rangle\langle V|$ are also called  \textit{horizontal} and \textit{vertical polarizors}.
+
+Another alternative as a base are the eigenstates of the so called \textit{rotated polarizors}:
+    \[
+    |+\rangle = \frac{1}{\sqrt{2}}(|H\rangle + |V\rangle), \quad |-\rangle = \frac{1}{\sqrt{2}}(|H\rangle - |V\rangle)
+    \]
+expressed as the operators $|+\rangle\langle+|$ and $|-\rangle\langle-|$.
+
+One last commonly used base are the eigenstates of the left and right circular polarizors:
+    \[
+    |R\rangle = \frac{1}{\sqrt{2}}(|H\rangle + i|V\rangle), \quad |L\rangle = \frac{1}{\sqrt{2}}(i|H\rangle + |V\rangle).
+    \]
+
+When representing classical bit values with, for example, electrons, we can prepare an electron in an eigenstate of \( \sigma_z \), such as \( |0\rangle \) for 0 and \( |1\rangle \) for 1. If we isolate the electron from interactions to preserve its state, measuring \( \sigma_z \) will yield the corresponding eigenvalue, indicating the stored binary value. 
+
+Maintaining the integrity of the stored bit is crucial, as interactions that alter the electron's state could change the stored information. In classical computers, such as hard disks, external disturbances like light or heat generally do not affect stored bits, allowing for easier maintenance. In contrast, isolating quantum systems from state-changing interactions with their environment presents significant challenges, a key issue in developing quantum computers.
+
+Thus, a classical bit can be represented by an orthonormal basis (ONB) in a two-dimensional Hilbert space, with the specific choice of ONB depending on a suitable observable whose eigenvectors correspond to the ONB vectors. Potential candidates for physical realizations include electrons and photons, but any quantum system with an appropriate two-dimensional Hilbert space can be utilized. Mathematically, we can identify the two-dimensional Hilbert space \( \mathbb H \) with \( \mathbb{C}^2 \) by selecting an ONB.
+
+\section{Qubits}
+
+Quantum mechanics also permits states of the form \( a|0\rangle + b|1\rangle \) where \( a,b \in \mathbb{C} \) and \( |a|^2 + |b|^2 = 1 \). These linear combinations have no classical analogue and do not exist in classical computing, allowing for a significantly greater information storage capacity in two-dimensional quantum systems. The complexities of writing, reading, or transforming information in such systems necessitate special considerations, motivating the introduction of the term \textit{``qubit''} to denote two-dimensional quantum systems in the context of their information content.
+
+\begin{definition}
+    A \textit{qubit} is a quantum mechanical system represented by a two-dimensional Hilbert space, denoted as \( \qubs \). The information in a qubit is stored in its state, which can be manipulated and read according to quantum mechanics.
+    
+In this space, we define an orthonormal basis \( \{|0\rangle, |1\rangle\} \) and an observable represented by a self-adjoint operator \( \sigma_z \). The operator \( \sigma_z \) has the eigenvector \( |0\rangle \) with eigenvalue \( +1 \) and \( |1\rangle \) with eigenvalue \( -1 \):
+\[
+\sigma_z |0\rangle = +1 |0\rangle, \quad \sigma_z |1\rangle = -1 |1\rangle.
+\]
+\end{definition}
+
+In classical computing, a bit serves as the fundamental unit of information, represented by the binary values \{0, 1\}. In quantum computing, the equivalent information container is a two-dimensional quantum system characterized by the Hilbert space \(\qubs\). The \textit{``value''} of the quantum information is the state \(|\psi\rangle \in \qubs\) in which the system is.
+
+As a result of the Projection Postulate \ref{pos: tre}, we can derive the following corollary:
+\begin{corollary}
+    A measurement of \(\sigma_z\) on a qubit yields either \(+1\) or \(-1\) as the observed value and projects the qubit into the eigenstate \(|0\rangle\) or \(|1\rangle\) corresponding to the observed value.
+\end{corollary}
+
+The orthonormal eigenvectors \(|0\rangle, |1\rangle\) of \(\sigma_z\) form a standard basis in \(\qubs\), allowing us to identify the qubit Hilbert space \(\qubs\) with \(\mathbb{C}^2\). From now on, we will use these states to represent the classical bit values 0 and 1. A measurement of \(\sigma_z\) yielding \(+1\) corresponds to the classical bit value 0, and according to the  Postulate \ref{pos: tre}, the qubit is in the state \(|0\rangle\). Similarly, a measurement yielding \(-1\) corresponds to the bit value 1, and the qubit is in state \(|1\rangle\).
+
+Thus, each classical bit value is mapped to a qubit state. However, not every qubit state can represent a classical bit value. A general qubit state is given by
+\begin{equation} \label{eq: qubit_in_general}
+|\psi\rangle = a|0\rangle + b|1\rangle
+\end{equation}
+with \(a, b \in \mathbb{C}\) and \(|a|^2 + |b|^2 = 1\). If both \(a\) and \(b\) are non-zero, the state is a superposition of \(|0\rangle\) and \(|1\rangle\), which has no classical counterpart. We won't see this, but such superpositions, unique to quantum systems, are the key to the efficiency of quantum algorithms compared to classical ones.
+
+\section{Qbytes}
+
+Classically, information is represented by bits, and a two-bit word, such as \((x_1, x_2)\), is an element of \(\{0, 1\}^2\), where each bit corresponds to 0 or 1. When using qubits instead of bits, we deal with a two-qubit quantum system composed of two subsystems.
+
+In quantum mechanics, systems often consist of multiple parts, each described by its own Hilbert space. For instance, a hydrogen atom consists of a proton and an electron, described by Hilbert spaces \(\mathbb{H}^P\) and \(\mathbb{H}^E\), respectively. The state space of the entire system is the \textit{tensor product} \(\mathbb{H}^P \otimes \mathbb{H}^E\), which combines the sub-systems. More generally, the tensor product of two Hilbert spaces \(\mathbb{H}^A \otimes \mathbb{H}^B\) describes the state space of a system composed of two subsystems. In Section \ref{sec: tensori} we will recall some important facts about the tensor product of Hilbert spaces, here we will only deal with what is relevant for quantum computing.
+
+\begin{definition}
+The $n$-fold tensor product of qubit spaces is defined as
+\[
+\qubs^{\otimes n} \coloneq \qubs \otimes \cdots \otimes \qubs \quad \text{(}n\text{ factors)}.
+\]
+We denote the $j+1$-th factor space, counting from the right in $\qubs^{\otimes n}$, by $\qubs_j$. In other words, we define
+\[
+\qubs^{\otimes n} = \qubs_{n-1} \otimes \cdots \otimes 
+\underset{\text{$j+1$-th factor}}{\qubs_j} \otimes \cdots \otimes \qubs_0.
+\]
+\end{definition}
+
+The Hilbert space $\qubs^{\otimes n}$ is $2^n$-dimensional. The reason for counting spaces from the right will become evident in the following, when we will define the computational basis. Remember that every $x\in\N$ with $x<2^n$ can be expressed in its \textit{bynary representation}
+$$
+x = \sum_{j=0}^{n-1} x_j 2^j \quad \text{with } x_j\in\{0,1\},
+$$
+we can also write
+$$
+(x)_2 = x_{n-1}\ldots x_1 x_0.
+$$
+
+\begin{definition}
+    Let $x \in \N$ with $x < 2^n$, and let $x_0, \dots, x_{n-1} \in \{0, 1\}^n$ be the coefficients of its binary representation.
+    For each such $x$, we define a vector $\ket{x} \in \qubs^{\otimes n}$ as 
+    \begin{align*}
+        \ket{x}^n &\coloneq \ket{x} \coloneq \ket{x_{n-1} \dots x_1 x_0} \\ 
+        & \coloneq\ket{x_{n-1}} \otimes \cdots \otimes \ket{x_1} \otimes \ket{x_0} = \bigotimes_{j=n-1}^{0} \ket{x_j}.
+    \end{align*}
+    If it is clear in which product space $\qubs^{\otimes n}$ the vector $\ket{x}^n$ lies, we will simply write $\ket{x}$ instead of $\ket{x}^n$.
+\end{definition}
+
+In $\qubs^{\otimes n}$ the smallest and largest representable numbers are 0 and $2^n-1$, and for them
+\begin{align*}
+    \ket{2^n-1}^n &= \ket{11\ldots1} = \bigotimes_{j=n-1}^{0} \ket{1},\\
+    \ket{0}^n &= \ket{00\ldots0} = \bigotimes_{j=n-1}^{0} \ket{0}.
+\end{align*}
+
+\begin{lemma}
+    The set of vectors $\left\{\ket{x}\in\qubs^{\otimes n} \text{ }|\text{ } x\in\N, \text{ }x<2^n\right\}$ forms an ONB of $\qubs^{\otimes n}$.
+\end{lemma}
+
+\begin{proof}
+    For $\ket{x}, \ket{y}\in\qubs^{\otimes n}$ one has
+    \begin{align*}
+        \langle x|y \rangle &= \langle x_{n-1}\ldots  x_0|y_{n-1}\ldots  y_0 \rangle\\
+        &= \prod_{j=0}^{n-1} \langle x_j|y_j \rangle = \prod_{j=0}^{n-1} \delta_{x_jy_j} = \delta_{xy}.
+    \end{align*}
+    Hence, the set $\left\{\ket{x}\in\qubs^{\otimes n} \text{ }|\text{ } x\in\N, \text{ }x<2^n\right\}$ has $2^n$ orthonormal vectors, and since $\dim \qubs^{\otimes n}$ they form an ONB.
+\end{proof}
+
+This ONB is very useful and has its own name.
+
+\begin{definition}
+    The orthonormal basis in $\qubs^{\otimes n}$ defined for $x \in \N$, with $x<2^n$, by $\ket{x} = \ket{x_{n-1} \dots x_0}$ is called the \textit{computational basis}.
+\end{definition}
+
+\begin{ex} \label{ex: compbasis}
+    In $\qubs$, the computational basis is identical to the standard basis:
+    \begin{align*}
+    \ket{0}^1 = \ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad \ket{1}^1 = \ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix},
+    \end{align*}
+    where the rightmost equalities show the identification with the standard basis in $\mathbb{C}^2 \cong \qubs$. The four basis vectors of the computational basis in $\qubs^{\otimes 2} \cong \mathbb{C}^4$ are:
+    \begin{align*}
+    \ket{0}^2 &= \ket{00} = \ket{0} \otimes \ket{0} = \begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \end{pmatrix}, \quad
+    &\ket{1}^2 = \ket{01} = \ket{0} \otimes \ket{1} = \begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \end{pmatrix}, \\
+    \ket{2}^2 &= \ket{10} = \ket{1} \otimes \ket{0} = \begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix}, \quad
+    &\ket{3}^2 = \ket{11} = \ket{1} \otimes \ket{1} = \begin{pmatrix} 0 \\ 0 \\ 0 \\ 1 \end{pmatrix}.
+    \end{align*}
+    In $\qubs^{\otimes 3} \cong \mathbb{C}^8$, the computational basis vectors are:
+    \begin{align*}
+    \ket{0}^3 &= \ket{000} = \ket{0} \otimes \ket{0} \otimes \ket{0} = \begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{pmatrix}, \\
+    \ket{1}^3 &= \ket{001} = \ket{0} \otimes \ket{0} \otimes \ket{1} = \begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{pmatrix}, \\
+    \ket{2}^3 &= \ket{010}, \quad \ket{3}^3 = \ket{011}, \quad \ket{4}^3 = \ket{100}, \\
+    \ket{5}^3 &= \ket{101}, \quad \ket{6}^3 = \ket{110}, \quad \ket{7}^3 = \ket{111}.
+    \end{align*}
+    In $\qubs$ we may consider 
+    \begin{align*}
+        \ket{\varphi_1} &= \frac{\ket{0} + \ket{1}}{\sqrt{2}} = \frac{1}{\sqrt2} \begin{pmatrix}
+            1\\1
+        \end{pmatrix},\\
+        \ket{\varphi_2} &= \frac{\ket{0} - \ket{1}}{\sqrt{2}} = \frac{1}{\sqrt2} \begin{pmatrix}
+            1\\-1
+        \end{pmatrix},\\
+        \ket{\psi_1} &= \ket{0} = \begin{pmatrix}
+            1\\0
+        \end{pmatrix},\\
+        \ket{\psi_2} &= \ket{1} = \begin{pmatrix}
+            0\\1
+        \end{pmatrix}.
+    \end{align*}
+\end{ex}
+Then, for example, in $\qubs^{\otimes2}$ we can construct:
+\begin{align*}
+    \ket{\varphi_1\otimes\varphi_2} &= \ket{\varphi_1}\otimes\ket{\varphi_2} = \frac{1}{\sqrt{2}}\begin{pmatrix}
+        1\\1
+    \end{pmatrix} \otimes \frac{1}{\sqrt{2}}\begin{pmatrix}
+        1\\-1
+    \end{pmatrix} = \frac{1}{2}\begin{pmatrix}
+        1\\-1\\1\\-1
+    \end{pmatrix},\\
+    \bra{\psi_1\otimes\psi_2} &= \bra{0}\otimes\bra{1} = \begin{pmatrix}
+        1&0
+    \end{pmatrix} \otimes \begin{pmatrix}
+        0&1
+    \end{pmatrix} = \begin{pmatrix}
+        0&1&0&0
+    \end{pmatrix} ,
+\end{align*}
+where the rightmost vectors are expressed in the basis given in Example \ref{ex: compbasis} and its dual. Using this we can find also that in this basis the matrix $\ket{\varphi_1\otimes\varphi_2}\bra{\psi_1\otimes\psi_2}$ is given by
+\begin{align*}
+\ket{\varphi_1\otimes\varphi_2}\bra{\psi_1\otimes\psi_2} &= \frac{1}{2}
+\begin{pmatrix}
+1 \\ -1 \\ 1 \\-1
+\end{pmatrix} 
+\begin{pmatrix}
+    0&1&0&0
+\end{pmatrix} \\&= \frac{1}{2}
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & -1 & 0 & 0
+\end{pmatrix}.
+\end{align*}
+On the other hand, we could also have obtained that by
+\begin{align*}
+\ket{\varphi_1\otimes\varphi_2}\bra{\psi_1\otimes\psi_2} &=
+\ket{\varphi_1}\bra{\psi_1}\otimes\ket{\varphi_2}\bra{\psi_2}
+\\&=\frac{1}{\sqrt2}
+\begin{pmatrix}
+1 & 0 \\ 1 &0
+\end{pmatrix}\otimes \frac{1}{\sqrt2} 
+\begin{pmatrix}
+    0&1\\0&-1
+\end{pmatrix} \\&= \frac{1}{2}
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & -1 & 0 & 0
+\end{pmatrix}.
+\end{align*}
+
+\section{Quantum Gates}
+
+The computational model for quantum computers is analogous to the classical model based on the \textit{Turing Machine}, however, we will not go into the details of such a computational model. Instead of states represented by elements in $\{0,1\}^n$, pure quantum states are vectors in the Hilbert space $\qubs^{\otimes n}$. A quantum computational process transforms a state of $n$ qubits to another, preserving the linear structure and normalization. This process is a unitary transformation $U : \qubs^{\otimes n} \to \qubs^{\otimes n}$, which physically is generated by applying an Hamiltonian for an appropriate period of time.
+
+To extract the result of a quantum computation, measurement is required, and this introduces a non-unitary transition from the prepared quantum state to the final measured state, as we saw in Postulate \ref{pos: tre}.
+
+Quantum gates, which are analogous to classical gates, are defined as unitary operators that act on the space of qubits. 
+
+\begin{definition} \label{def: quantumgate}
+    A \textit{quantum} $n$-\textit{gate} is a unitary operator 
+    $$U : \qubs^{\otimes n} \to \qubs^{\otimes n}.$$ 
+    \textit{Unary gates} correspond to $n = 1$, and \textit{binary gates} to $n = 2$. 
+\end{definition}
+
+Quantum gates are linear transformations and can be represented by matrices in the computational basis. Complex $n$-gates can be constructed from elementary unary and binary gates. An important example is the following.
+
+\begin{ex}
+    The \textit{Quantum NOT gate} is the well known Pauli matrix
+    $$
+    X \coloneq \sigma_x. 
+    $$
+    We already encountered this matrix in Section \ref{sec: Pauli-matrix}, and we already know it is unitary. Because of 
+    \begin{align*}
+        \sigma_x \ket{0} &= \begin{pmatrix}
+            0&1\\
+            1&0
+        \end{pmatrix} \begin{pmatrix}
+            1\\0
+        \end{pmatrix} = \begin{pmatrix}
+            0\\1
+        \end{pmatrix} = \ket{1},\\
+        \sigma_x \ket{1} &= \begin{pmatrix}
+            0&1\\
+            1&0
+        \end{pmatrix} \begin{pmatrix}
+            0\\1
+        \end{pmatrix} = \begin{pmatrix}
+            1\\0
+        \end{pmatrix} = \ket{0}.
+    \end{align*}
+    it is considered the quantum analogue of the classical negation and thus termed as the quantum NOT gate.
+\end{ex}
+
+\begin{ex}
+    One of the simplest one qubit non classical gate one can imagine is a fractional power of the NOT gate, such as $\sqrt{\text{NOT}}$:
+    \begin{equation*}
+    \sqrt{\text{NOT}} \coloneq
+    \begin{pmatrix}
+    0 & 1 \\
+    1 & 0
+    \end{pmatrix}^\frac{1}{2}
+    =
+    \frac{1}{2}
+    \begin{pmatrix}
+    1 + i & 1 - i \\
+    1 - i & 1 + i
+    \end{pmatrix}.
+    \end{equation*}
+    The $\sqrt{\text{NOT}}$ gate has the property that a repeated application of the gate, i.e., $\sqrt{\text{NOT}} \cdot \sqrt{\text{NOT}}$, is equivalent to the NOT operation, but a single application results in a
+    quantum state that neither corresponds to the classical bit 0 nor the classical bit 1, in fact
+    \begin{align*}
+    \sqrt{\text{NOT}}|0\rangle &= \frac{1}{2} \left( (1+i)|0\rangle + (1-i)|1\rangle \right) \\
+    \sqrt{\text{NOT}}|1\rangle &=  \frac{1}{2} \left( (1-i)|0\rangle + (1+i)|1\rangle \right).
+    \end{align*}
+\end{ex}
+
+Note that measurements are not quantum gates as intended in Definition \ref{def: quantumgate}, since they are not invertible and so definetely not unitary, but still they are present in many quantum algorithms, so often they are presented with the other quantum gates.
+
+
+

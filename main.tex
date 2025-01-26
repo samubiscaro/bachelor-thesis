@@ -1,0 +1,57 @@
+%versione online
+%\documentclass[a4paper,oneside]{book}
+%versione per rilegatura
+\documentclass[a4paper,twoside,openright]{book}
+%\addtolength{\oddsidemargin}{+1.3cm}
+%\addtolength{\evensidemargin}{-1.3cm}
+ 
+\input{structure}
+% -----------------------------------------------------------------
+
+\begin{document}
+
+\frontmatter
+\include{frontespizio}
+\include{chapters/clear_page}
+
+
+\include{frontmatter/acknowledgements}
+
+
+
+\pagestyle{empty}
+\renewcommand\contentsname{Table of Contents}
+\tableofcontents
+
+\mainmatter
+
+\pagestyle{fancy}
+    \fancyhf{}% Clear header/footer
+    \fancyhead[OR]{\sffamily\nouppercase\rightmark}
+    \fancyhead[EL]{\sffamily\nouppercase\leftmark}    
+    \fancyfoot[OR, EL]{\sffamily\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+
+\input{chapters/introduction}
+\input{chapters/addsewlemma}
+\input{chapters/multsewlemma}
+\input{chapters/mecquant}
+\input{chapters/eqdiff}
+
+
+\appendix
+\input{chapters/notaz}
+\input{chapters/ygronw}
+
+
+\backmatter
+\nocite{*}
+\bibliographystyle{amsalpha}
+\thispagestyle{empty}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliography{bibliography}
+
+\end{document}
+% -----------------------------------------------------------------
